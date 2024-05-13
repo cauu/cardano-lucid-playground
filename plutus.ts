@@ -1,12 +1,54 @@
 import { applyParamsToScript, Data, Validator } from "lucid-cardano";
 
-export interface VestingVesting {
+export interface HelloWord {
+  new (): Validator;
+  datum: { owner: string };
+  redeemer: { msg: string };
+}
+
+export const HelloWord = Object.assign(
+  function () {
+    return {
+      type: "PlutusV2",
+      script:
+        "58e901000032323232323223223225333006323253330083371e6eb8c008c028dd5002a4410d48656c6c6f2c20576f726c642100100114a06644646600200200644a66601c00229404c94ccc030cdc79bae301000200414a226600600600260200026eb0c02cc030c030c030c030c030c030c030c030c024dd5180098049baa002375c600260126ea80188c02c0045261365653330043370e900018029baa001132325333009300b002149858dd7180480098031baa0011653330023370e900018019baa0011323253330073009002149858dd7180380098021baa001165734aae7555cf2ab9f5742ae881",
+    };
+  },
+  {
+    datum: {
+      title: "Datum",
+      anyOf: [
+        {
+          title: "Datum",
+          dataType: "constructor",
+          index: 0,
+          fields: [{ dataType: "bytes", title: "owner" }],
+        },
+      ],
+    },
+  },
+  {
+    redeemer: {
+      title: "Redeemer",
+      anyOf: [
+        {
+          title: "Redeemer",
+          dataType: "constructor",
+          index: 0,
+          fields: [{ dataType: "bytes", title: "msg" }],
+        },
+      ],
+    },
+  }
+) as unknown as HelloWord;
+
+export interface Vesting {
   new (): Validator;
   datum: { lockUntil: bigint; owner: string; beneficiary: string };
   _redeemer: undefined;
 }
 
-export const VestingVesting = Object.assign(
+export const Vesting = Object.assign(
   function () {
     return {
       type: "PlutusV2",
@@ -38,4 +80,4 @@ export const VestingVesting = Object.assign(
       anyOf: [{ dataType: "constructor", index: 0, fields: [] }],
     },
   }
-) as unknown as VestingVesting;
+) as unknown as Vesting;
