@@ -1,9 +1,9 @@
 import { Lucid } from 'lucid-cardano';
 
-import { HelloWord } from '../plutus';
+import { HelloWordHelloWorld } from '../plutus';
 
 export function collectValidators(lucid: Lucid) {
-  const helloWord = new HelloWord();
+  const helloWord = new HelloWordHelloWorld();
 
   return {
     helloWord
