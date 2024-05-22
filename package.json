@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "aiken build & tsc --build tsconfig-scripts.json",
+    "build": "aiken build & node ./scripts/blueprint.js",
     "deploy": "node --es-module-specifier-resolution=node ./dist/src/index.js"
   },
   "keywords": [],
