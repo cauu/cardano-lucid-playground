@@ -44,6 +44,7 @@ export function LucidProvider(props: IProps) {
   return <LucidContext.Provider value={value}>{children}</LucidContext.Provider>;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useLucid() {
   const context = useContext(LucidContext);
 
