@@ -1,9 +1,9 @@
 import React from 'react';
-import { Button } from '@mui/material';
 // import { ConnectWalletList } from '@cardano-foundation/cardano-connect-with-wallet';
 // import { UnavailableWalletVisibility } from '@cardano-foundation/cardano-connect-with-wallet-core';
 
 import { useCardanoWallet } from '../hooks/useCardanoWallet';
+import { ConnectWalletButton } from '../components/ConnectWalletButton';
 
 interface IProps {
   children?: React.ReactNode;
@@ -30,7 +30,7 @@ export const MainLayout = (props: IProps) => {
           111
         </a>
 
-        <Button>Connect Wallet</Button>
+        <ConnectWalletButton supportedWallets={supportedWallets} />
       </header>
       <main>{children}</main>
 
