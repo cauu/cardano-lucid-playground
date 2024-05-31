@@ -23,7 +23,8 @@
     "paths": {
       "@/*": [
         "./*"
-      ]
+      ],
+      "lucid-cardano": ["node_modules/@cauu/lucid-cardano"]
     }
   },
   "include": ["src"],

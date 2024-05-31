@@ -30,7 +30,7 @@
     "bignumber.js": "^9.1.2",
     "classnames": "^2.5.1",
     "dotenv": "^16.4.5",
-    "lucid-cardano": "^0.10.7",
+    "@cauu/lucid-cardano": "^0.10.8",
     "react": "^18.2.0",
     "react-device-detect": "^2.2.3",
     "react-dom": "^18.2.0",

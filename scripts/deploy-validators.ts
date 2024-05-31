@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { Blockfrost, Constr, Data, Lucid, OutputData, Script, UTxO, toScriptRef } from 'lucid-cardano';
+import { Blockfrost, Constr, Data, Lucid, OutputData, Script, UTxO, toScriptRef } from '@cauu/lucid-cardano';
 
 import { PRIVATE_KEY, BLOCKFORST_API_KEY } from './constant';
 import { collectValidators } from './collect-validators';

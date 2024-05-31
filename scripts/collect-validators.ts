@@ -1,4 +1,4 @@
-import { Lucid } from 'lucid-cardano';
+import { Lucid } from '@cauu/lucid-cardano';
 
 import { HelloWordHelloWorld } from '../plutus';
 
