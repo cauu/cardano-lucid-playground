@@ -133,3 +133,18 @@ export const getSupportedWallets = (): ReadonlyArray<WalletInfo> => {
 
   return [...installedWallets, ...uninstalledWallets];
 };
+
+export function shortenWalletAddress(address: string, size: 'normal' | 'shorter'): string {
+  if (size === 'shorter') {
+    if (address.length <= 8) {
+      return address;
+    }
+    return `${address.slice(0, 5)}...${address.slice(-3)}`;
+  } else if (size === 'normal') {
+    if (address.length <= 16) {
+      return address;
+    }
+    return `${address.slice(0, 8)}...${address.slice(-8)}`;
+  }
+  return address;
+}

@@ -1,7 +1,7 @@
 import { ReactNode, createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { Blockfrost, Lucid } from 'lucid-cardano';
 
-import { BLOCKFORST_API_KEY } from '../constants/constant';
+import { BLOCKFORST_API_KEY } from '../common/constant';
 
 interface ILucidContext {
   lucid: Lucid | null;

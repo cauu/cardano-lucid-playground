@@ -1,30 +1,72 @@
-import { Button, Drawer } from '@mui/material';
+import { Button, Drawer, Menu, MenuItem } from '@mui/material';
 import { useState } from 'react';
 import LaunchIcon from '@mui/icons-material/Launch';
 
-import { WalletInfo } from '@/src/common/type';
+import { useCardanoWallet } from '@/src/hooks/useCardanoWallet';
+import { shortenWalletAddress } from '@/src/utils/wallet-utils';
 
-interface IProps {
-  supportedWallets: readonly WalletInfo[];
-}
+export const ConnectWalletButton = () => {
+  const { supportedWallets, usedAddresses, connect, disconnect } = useCardanoWallet();
 
-export const ConnectWalletButton = (props: IProps) => {
-  const { supportedWallets } = props;
-
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [showWalletList, setShowWalletList] = useState(false);
   const [showUninstalledWallets, setShowUninstalledWallets] = useState(false);
 
-  const handleConnectWallet = () => {
+  const openMenu = Boolean(anchorEl);
+
+  const handleConnect = (walletName: string) => {
+    const onConnect = () => {
+      setShowWalletList(false);
+      setAnchorEl(null);
+      setShowUninstalledWallets(false);
+    };
+    const onConnectError = () => {};
+    connect(walletName, onConnect, onConnectError);
+  };
+
+  const handleDisconnect = () => {
+    disconnect();
+    setAnchorEl(null);
+  };
+
+  const handleShowConnectWallet = () => {
     setShowWalletList(true);
+  };
+
+  const handleShowMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
   };
 
   const installedWallets = (supportedWallets || []).filter((wallet) => wallet.isInstalled);
 
   const uninstallWallets = (supportedWallets || []).filter((wallet) => !wallet.isInstalled);
 
+  const walletAddress = usedAddresses && usedAddresses.length ? usedAddresses[0] : '';
+
   return (
     <>
-      <Button onClick={handleConnectWallet}>Connect Wallet</Button>
+      {walletAddress ? (
+        <div>
+          <Button onClick={handleShowMenu}>{shortenWalletAddress(walletAddress, 'shorter')}</Button>
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={openMenu}
+            onClose={handleCloseMenu}
+            MenuListProps={{
+              'aria-labelledby': 'basic-button'
+            }}
+          >
+            <MenuItem onClick={handleDisconnect}>Disconnect Wallet</MenuItem>
+          </Menu>
+        </div>
+      ) : (
+        <Button onClick={handleShowConnectWallet}>Connect Wallet</Button>
+      )}
 
       <Drawer anchor="right" open={showWalletList} onClose={() => setShowWalletList(false)}>
         <div className="px-4 py-6 w-96">
@@ -38,6 +80,7 @@ export const ConnectWalletButton = (props: IProps) => {
                 <Button
                   variant="outlined"
                   className="w-full !justify-start !px-4 !py-3 !text-sm !border-gray-300 !text-gray-900"
+                  onClick={() => handleConnect?.(wallet.name)}
                 >
                   <div className="flex items-center">
                     <img src={wallet.icon} className="h-6 w-6" />

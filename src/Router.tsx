@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { HelloWorld } from './pages/HelloWorld'
-import NotFound from './pages/404'
+import { HelloWorld } from './pages/HelloWorld';
+import NotFound from './pages/404';
 
 const routerConfig = [
   {

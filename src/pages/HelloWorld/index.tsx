@@ -1,10 +1,7 @@
-import { useCardano } from '@cardano-foundation/cardano-connect-with-wallet';
-import { useEffect } from 'react';
+import { useValidators } from './useValidators';
 
 export const HelloWorld = () => {
-  const { enabledWallet, installedExtensions } = useCardano();
-
-  console.log('enabled', enabledWallet, installedExtensions);
+  useValidators();
 
   return <div>Hello World</div>;
 };
