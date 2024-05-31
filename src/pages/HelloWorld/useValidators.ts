@@ -1,31 +1,37 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Lucid, Blockfrost } from 'lucid-cardano';
+import { useMemo } from 'react';
 
 import { HelloWordHelloWorld } from '@/plutus';
-
-import { BLOCKFORST_API_KEY } from '@/src/common/constant';
-import { useCardanoWallet } from '@/src/hooks/useCardanoWallet';
+import { useLucid } from '@/src/hooks/useLucid';
+import { ValidatorDeployer } from '@/src/contract/ValidatorDeployer';
 
 export const useValidators = () => {
-  const [lucid, setLucid] = useState<Lucid>();
+  const { lucid } = useLucid();
 
-  const { enabledWallet } = useCardanoWallet();
+  const deployers = useMemo(() => {
+    if (!lucid) return [];
 
-  const validators = [HelloWordHelloWorld];
+    return [
+      new ValidatorDeployer(lucid, {
+        script: new HelloWordHelloWorld(),
+        datumMeta: HelloWordHelloWorld.datum,
+        redeemerMeta: HelloWordHelloWorld.redeemer
+      })
+    ];
+  }, [lucid]);
 
-  console.log('xxxx', BLOCKFORST_API_KEY);
+  const deploy = async () => {
+    try {
+      console.log('deploystart', lucid);
+      const utxos = await Promise.all(deployers.map((deployer) => deployer.deploy()));
+      console.log('deployend');
+      return utxos;
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
+  };
 
-  useEffect(() => {
-    if (!enabledWallet) return;
-
-    Lucid.new(new Blockfrost('https://cardano-preview.blockfrost.io/api/v0', BLOCKFORST_API_KEY), 'Preview').then(
-      async (_lucid) => {
-        // const api = await window.cardano[enabledWallet].enable();
-        // console.log('xxxx222', api);
-        // _lucid.selectWallet(api);
-        // console.log('setlucid', _lucid, api, enabledWallet);
-        // setLucid(_lucid);
-      }
-    );
-  }, [enabledWallet]);
+  return {
+    deploy
+  };
 };

@@ -20,7 +20,9 @@ export const ConnectWalletButton = () => {
       setAnchorEl(null);
       setShowUninstalledWallets(false);
     };
-    const onConnectError = () => {};
+    const onConnectError = (e: Error) => {
+      console.error(e);
+    };
     connect(walletName, onConnect, onConnectError);
   };
 

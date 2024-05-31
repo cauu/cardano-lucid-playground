@@ -5,6 +5,8 @@ import React from 'react';
 // import { useCardanoWallet } from '../hooks/useCardanoWallet';
 import { ConnectWalletButton } from '../components/ConnectWalletButton';
 
+import { LucidProvider } from '../hooks/useLucid';
+
 interface IProps {
   children?: React.ReactNode;
 }
@@ -21,7 +23,9 @@ export const MainLayout = (props: IProps) => {
 
         <ConnectWalletButton />
       </header>
-      <main>{children}</main>
+      <main>
+        <LucidProvider>{children}</LucidProvider>
+      </main>
 
       {/* <ConnectWalletList showUnavailableWallets={UnavailableWalletVisibility.SHOW_UNAVAILABLE} /> */}
     </div>

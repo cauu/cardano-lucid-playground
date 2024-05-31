@@ -2,6 +2,7 @@ import { ReactNode, createContext, useContext, useEffect, useMemo, useState } fr
 import { Blockfrost, Lucid } from 'lucid-cardano';
 
 import { BLOCKFORST_API_KEY } from '../common/constant';
+import { useCardanoWallet } from './useCardanoWallet';
 
 interface ILucidContext {
   lucid: Lucid | null;
@@ -12,28 +13,38 @@ const LucidContext = createContext<ILucidContext>({
 });
 
 interface IProps {
-  lucid: Lucid | null;
+  // lucid: Lucid | null;
   children: ReactNode;
 }
 
 export function LucidProvider(props: IProps) {
   const { children } = props;
 
+  const { enabledWallet } = useCardanoWallet();
+
   const [lucid, setLucid] = useState<Lucid | null>(null);
 
   useEffect(() => {
-    Lucid.new(new Blockfrost('https://cardano-preprod.blockfrost.io/api/v0', BLOCKFORST_API_KEY), 'Preprod').then(
+    if (!enabledWallet) return;
+
+    console.log('BLOCKFORST_API_KEYBLOCKFORST_API_KEY', BLOCKFORST_API_KEY);
+
+    // Lucid.new(new Blockfrost('https://cardano-preprod.blockfrost.io/api/v0', BLOCKFORST_API_KEY), 'Preprod').then(
+    Lucid.new(new Blockfrost('https://cardano-preview.blockfrost.io/api/v0', BLOCKFORST_API_KEY), 'Preview').then(
       (_lucid) => {
         setLucid(_lucid);
       }
     );
-  }, []);
+  }, [enabledWallet]);
 
   useEffect(() => {
-    if (lucid) {
+    if (lucid && enabledWallet) {
       /** Select wallet */
+      window.cardano[enabledWallet].enable().then((api) => {
+        lucid.selectWallet(api);
+      });
     }
-  }, [lucid]);
+  }, [lucid, enabledWallet]);
 
   const value = useMemo(() => {
     return {

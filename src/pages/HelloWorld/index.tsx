@@ -1,7 +1,12 @@
+import { Button } from '@mui/material';
 import { useValidators } from './useValidators';
 
 export const HelloWorld = () => {
-  useValidators();
+  const { deploy } = useValidators();
 
-  return <div>Hello World</div>;
+  return (
+    <div>
+      <Button onClick={deploy}>Deploy</Button>
+    </div>
+  );
 };
