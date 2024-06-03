@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { SnackbarProvider } from 'notistack';
+
 import { Router } from './Router';
 import { MainLayout } from './layouts/MainLayout';
+import { LucidProvider } from './hooks/useLucid';
 
 // import init from 'test-npm-crate?init';
-
-// import './libs/cardano_message_signing_bg.wasm?init';
-// import './libs/cardano_multiplatform_lib_bg.wasm?init';
 
 import './index.css';
 
@@ -18,8 +18,12 @@ import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <MainLayout>
-      <Router />
-    </MainLayout>
+    <SnackbarProvider>
+      <LucidProvider>
+        <MainLayout>
+          <Router />
+        </MainLayout>
+      </LucidProvider>
+    </SnackbarProvider>
   </React.StrictMode>
 );

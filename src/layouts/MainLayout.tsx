@@ -1,11 +1,7 @@
 import React from 'react';
-// import { ConnectWalletList } from '@cardano-foundation/cardano-connect-with-wallet';
-// import { UnavailableWalletVisibility } from '@cardano-foundation/cardano-connect-with-wallet-core';
 
-// import { useCardanoWallet } from '../hooks/useCardanoWallet';
 import { ConnectWalletButton } from '../components/ConnectWalletButton';
-
-import { LucidProvider } from '../hooks/useLucid';
+import { SwitchNetworkButton } from '../components/SwitchNetworkButton';
 
 interface IProps {
   children?: React.ReactNode;
@@ -18,14 +14,15 @@ export const MainLayout = (props: IProps) => {
     <div>
       <header className="flex justify-between items-center w-full border-b p-4">
         <a href="/" target="_blank">
-          111
+          Cardano Playground
         </a>
 
-        <ConnectWalletButton />
+        <div className="flex gap-2">
+          <SwitchNetworkButton />
+          <ConnectWalletButton />
+        </div>
       </header>
-      <main>
-        <LucidProvider>{children}</LucidProvider>
-      </main>
+      <main>{children}</main>
 
       {/* <ConnectWalletList showUnavailableWallets={UnavailableWalletVisibility.SHOW_UNAVAILABLE} /> */}
     </div>

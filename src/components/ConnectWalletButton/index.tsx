@@ -1,12 +1,14 @@
 import { Button, Drawer, Menu, MenuItem } from '@mui/material';
 import { useState } from 'react';
 import LaunchIcon from '@mui/icons-material/Launch';
+import { useSnackbar } from 'notistack';
 
 import { useCardanoWallet } from '@/src/hooks/useCardanoWallet';
 import { shortenWalletAddress } from '@/src/utils/wallet-utils';
 
 export const ConnectWalletButton = () => {
   const { supportedWallets, usedAddresses, connect, disconnect } = useCardanoWallet();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [showWalletList, setShowWalletList] = useState(false);
@@ -21,6 +23,7 @@ export const ConnectWalletButton = () => {
       setShowUninstalledWallets(false);
     };
     const onConnectError = (e: Error) => {
+      enqueueSnackbar(e.message, { variant: 'error' });
       console.error(e);
     };
     connect(walletName, onConnect, onConnectError);
@@ -53,7 +56,9 @@ export const ConnectWalletButton = () => {
     <>
       {walletAddress ? (
         <div>
-          <Button onClick={handleShowMenu}>{shortenWalletAddress(walletAddress, 'shorter')}</Button>
+          <Button variant="outlined" onClick={handleShowMenu}>
+            {shortenWalletAddress(walletAddress, 'shorter')}
+          </Button>
           <Menu
             id="basic-menu"
             anchorEl={anchorEl}
@@ -67,7 +72,9 @@ export const ConnectWalletButton = () => {
           </Menu>
         </div>
       ) : (
-        <Button onClick={handleShowConnectWallet}>Connect Wallet</Button>
+        <Button variant="outlined" onClick={handleShowConnectWallet}>
+          Connect Wallet
+        </Button>
       )}
 
       <Drawer anchor="right" open={showWalletList} onClose={() => setShowWalletList(false)}>

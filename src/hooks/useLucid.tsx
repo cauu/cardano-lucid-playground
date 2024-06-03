@@ -1,17 +1,22 @@
-import { ReactNode, createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { ReactNode, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Blockfrost, Lucid } from 'lucid-cardano';
 
 import { BLOCKFORST_API_KEY } from '../common/constant';
 import { useCardanoWallet } from './useCardanoWallet';
+import { NetworkType } from '@cardano-foundation/cardano-connect-with-wallet-core';
 
 interface ILucidContext {
   walletAddress: string;
   lucid: Lucid | null;
+  networkType: NetworkType;
+  switchNetwork: (_networkType: NetworkType) => void;
 }
 
 const LucidContext = createContext<ILucidContext>({
   walletAddress: '',
-  lucid: null
+  lucid: null,
+  networkType: NetworkType.TESTNET,
+  switchNetwork: () => {}
 });
 
 interface IProps {
@@ -25,12 +30,11 @@ export function LucidProvider(props: IProps) {
   const { enabledWallet } = useCardanoWallet();
 
   const [lucid, setLucid] = useState<Lucid | null>(null);
+  const [networkType, setNetworkType] = useState<NetworkType>(NetworkType.TESTNET);
   const [walletAddress, setWalletAddress] = useState<string>('');
 
   useEffect(() => {
     if (!enabledWallet) return;
-
-    console.log('BLOCKFORST_API_KEYBLOCKFORST_API_KEY', BLOCKFORST_API_KEY);
 
     // Lucid.new(new Blockfrost('https://cardano-preprod.blockfrost.io/api/v0', BLOCKFORST_API_KEY), 'Preprod').then(
     Lucid.new(new Blockfrost('https://cardano-preview.blockfrost.io/api/v0', BLOCKFORST_API_KEY), 'Preview').then(
@@ -53,12 +57,21 @@ export function LucidProvider(props: IProps) {
     }
   }, [lucid, enabledWallet]);
 
+  const switchNetwork = useCallback(
+    (_networkType: NetworkType) => {
+      setNetworkType(_networkType);
+    },
+    [setNetworkType]
+  );
+
   const value = useMemo(() => {
     return {
       walletAddress,
-      lucid
+      lucid,
+      networkType,
+      switchNetwork
     };
-  }, [walletAddress, lucid]);
+  }, [walletAddress, lucid, networkType, switchNetwork]);
 
   return <LucidContext.Provider value={value}>{children}</LucidContext.Provider>;
 }
