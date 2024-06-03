@@ -13,7 +13,7 @@ export const MainLayout = (props: IProps) => {
   return (
     <div>
       <header className="flex justify-between items-center w-full border-b p-4">
-        <a href="/" target="_blank">
+        <a href="/" target="_blank" className="font-[600] text-xl">
           Cardano Playground
         </a>
 
