@@ -5,10 +5,12 @@ import { BLOCKFORST_API_KEY } from '../common/constant';
 import { useCardanoWallet } from './useCardanoWallet';
 
 interface ILucidContext {
+  walletAddress: string;
   lucid: Lucid | null;
 }
 
 const LucidContext = createContext<ILucidContext>({
+  walletAddress: '',
   lucid: null
 });
 
@@ -23,6 +25,7 @@ export function LucidProvider(props: IProps) {
   const { enabledWallet } = useCardanoWallet();
 
   const [lucid, setLucid] = useState<Lucid | null>(null);
+  const [walletAddress, setWalletAddress] = useState<string>('');
 
   useEffect(() => {
     if (!enabledWallet) return;
@@ -42,15 +45,20 @@ export function LucidProvider(props: IProps) {
       /** Select wallet */
       window.cardano[enabledWallet].enable().then((api) => {
         lucid.selectWallet(api);
+
+        lucid.wallet.address().then((address) => {
+          setWalletAddress(address);
+        });
       });
     }
   }, [lucid, enabledWallet]);
 
   const value = useMemo(() => {
     return {
+      walletAddress,
       lucid
     };
-  }, [lucid]);
+  }, [walletAddress, lucid]);
 
   return <LucidContext.Provider value={value}>{children}</LucidContext.Provider>;
 }

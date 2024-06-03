@@ -1,11 +1,18 @@
 import { useMemo } from 'react';
+import { Constr, Data } from 'lucid-cardano';
 
 import { HelloWordHelloWorld } from '@/plutus';
 import { useLucid } from '@/src/hooks/useLucid';
 import { ValidatorDeployer } from '@/src/contract/ValidatorDeployer';
 
 export const useValidators = () => {
-  const { lucid } = useLucid();
+  const { lucid, walletAddress } = useLucid();
+
+  const publicKeyHash = useMemo(() => {
+    if (!lucid || !walletAddress) return '';
+
+    return lucid.utils.getAddressDetails(walletAddress).paymentCredential?.hash;
+  }, [lucid, walletAddress]);
 
   const deployers = useMemo(() => {
     if (!lucid) return [];
@@ -21,9 +28,16 @@ export const useValidators = () => {
 
   const deploy = async () => {
     try {
-      console.log('deploystart', lucid);
-      const utxos = await Promise.all(deployers.map((deployer) => deployer.deploy()));
-      console.log('deployend');
+      if (!publicKeyHash) return;
+
+      const datum = Data.to(new Constr(0, [publicKeyHash]));
+      const utxos = await Promise.all(
+        deployers.map((deployer) =>
+          deployer.deploy({
+            inline: datum
+          })
+        )
+      );
       return utxos;
     } catch (e) {
       console.error(e);

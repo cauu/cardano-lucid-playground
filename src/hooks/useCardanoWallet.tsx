@@ -1,12 +1,15 @@
+import { NetworkType } from '@cardano-foundation/cardano-connect-with-wallet-core';
 import { useCardano } from '@cardano-foundation/cardano-connect-with-wallet';
 import { getSupportedWallets } from '../utils/wallet-utils';
 
 export interface IOptions {
+  network?: NetworkType;
   //   onConnect?: (walletName: string) => void;
   //   onConnectError?: (walletName: string, error: Error) => void;
 }
 
-export function useCardanoWallet() {
+export function useCardanoWallet(opts: IOptions = {}) {
+  const { network = NetworkType.TESTNET } = opts;
   //   const { onConnect, onConnectError } = opts;
 
   const supportedWallets = getSupportedWallets();
@@ -22,7 +25,9 @@ export function useCardanoWallet() {
     connect,
     disconnect,
     signMessage
-  } = useCardano();
+  } = useCardano({
+    limitNetwork: network
+  });
 
   return {
     isEnabled,
