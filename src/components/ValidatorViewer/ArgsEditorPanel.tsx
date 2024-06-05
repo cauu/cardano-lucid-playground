@@ -4,6 +4,11 @@ import { useState } from 'react';
 
 import { Editor } from './Editor';
 
+const DEFAULT_VALUE_MAPPING: any = {
+  bytes: '',
+  integer: 0
+};
+
 interface IProps {
   schema: {
     title: string;
@@ -30,16 +35,21 @@ export const ArgsEditorPanel = (props: IProps) => {
   };
 
   return (
-    <div className="flex-1">
+    <div className="flex-1 flex flex-col">
       <Tabs onChange={handleChangeTab} value={tabIndex}>
         {groups?.map((group) => {
           return <Tab label={`${group.title}_${group.index}`} tabIndex={group.index}></Tab>;
         })}
       </Tabs>
-      {groups.map((group) => {
+      {(groups || []).map((group) => {
+        const defaultValue = group.fields.reduce((acc: any, field: any) => {
+          acc[field.title] = `${DEFAULT_VALUE_MAPPING[field.dataType]}`;
+          return acc;
+        }, {});
+
         return (
-          <div hidden={tabIndex !== group.index}>
-            <Editor />
+          <div className="relative flex-1 min-h-[40vh]" hidden={group.index !== tabIndex}>
+            <Editor defaultValue={JSON.stringify(defaultValue)} />
           </div>
         );
       })}

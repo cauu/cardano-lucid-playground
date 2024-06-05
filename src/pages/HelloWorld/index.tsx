@@ -14,7 +14,7 @@ export const HelloWorld = () => {
 
   return (
     <div className="flex flex-1 flex-col gap-4">
-      <div>{deployers && deployers.length && <ValidatorViewer deployer={deployers[0]} />}</div>
+      <div>{deployers && !!deployers.length ? <ValidatorViewer deployer={deployers[0]} /> : null}</div>
       <div className="flex justify-end">
         <Button variant="outlined" onClick={handleDeploy}>
           Deploy
