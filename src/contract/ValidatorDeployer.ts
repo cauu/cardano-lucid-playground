@@ -1,4 +1,5 @@
 import { Lucid, OutputData, Script, UTxO, toScriptRef } from 'lucid-cardano';
+import { DataType } from '../common/type';
 
 export class ValidatorDeployer {
   lucid: Lucid;
@@ -7,9 +8,25 @@ export class ValidatorDeployer {
 
   params: any;
 
-  datumMeta: any;
+  datumMeta: {
+    title: 'Datum';
+    anyOf: {
+      title: 'Datum';
+      dataType: 'constructor';
+      index: number;
+      fields: { dataType: DataType; title: string }[];
+    }[];
+  };
 
-  redeemerMeta: any;
+  redeemerMeta: {
+    title: 'Redeemer';
+    anyOf: {
+      title: 'Redeemer';
+      dataType: 'constructor';
+      index: number;
+      fields: { dataType: DataType; title: string }[];
+    }[];
+  };
 
   constructor(
     lucid: Lucid,

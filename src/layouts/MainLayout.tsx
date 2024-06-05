@@ -11,7 +11,7 @@ export const MainLayout = (props: IProps) => {
   const { children } = props;
 
   return (
-    <div>
+    <div className="flex flex-col h-[100vh]">
       <header className="flex justify-between items-center w-full border-b p-4">
         <a href="/" target="_blank" className="font-[600] text-xl">
           Cardano Playground
@@ -22,7 +22,7 @@ export const MainLayout = (props: IProps) => {
           <ConnectWalletButton />
         </div>
       </header>
-      <main>{children}</main>
+      <main className="flex flex-1 px-6 py-4">{children}</main>
 
       {/* <ConnectWalletList showUnavailableWallets={UnavailableWalletVisibility.SHOW_UNAVAILABLE} /> */}
     </div>

@@ -46,6 +46,7 @@ export const useValidators = () => {
   };
 
   return {
+    deployers,
     deploy
   };
 };

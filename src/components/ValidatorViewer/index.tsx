@@ -1,35 +1,26 @@
-import { Tabs, Tab } from '@mui/material';
-import { useState } from 'react';
+import { ValidatorDeployer } from '@/src/contract/ValidatorDeployer';
+import { ArgsEditor } from './ArgsEditor';
 
 interface IProps {
-  title: string;
-  key: 'anyOf';
-  groups: {
-    title: string;
-    index: number;
-    fields: { dataType: string; title: string }[];
-  }[];
+  deployer: ValidatorDeployer;
 }
 
 export const ValidatorViewer = (props: IProps) => {
-  const { title, groups } = props;
+  const { deployer } = props;
 
-  const [tabIndex, setTabIndex] = useState(0);
+  const datumMeta = deployer?.datumMeta;
 
-  const handleChangeTab = (_: React.SyntheticEvent, newValue: number) => {
-    setTabIndex(newValue);
-  };
+  const redeemerMeta = deployer?.redeemerMeta;
 
   return (
-    <div>
-      <h3>{title}</h3>
+    <div className="flex flex-1 gap-2">
+      <div className="flex flex-1">
+        <ArgsEditor schema={datumMeta} />
+      </div>
 
-      <Tabs onChange={handleChangeTab} value={tabIndex}>
-        {groups?.map((group) => {
-          return <Tab label={`${group.title}_${group.index}`} tabIndex={group.index}></Tab>;
-        })}
-        <Tab label="datum"></Tab>
-      </Tabs>
+      <div className="flex flex-1">
+        <ArgsEditor schema={redeemerMeta} />
+      </div>
     </div>
   );
 };

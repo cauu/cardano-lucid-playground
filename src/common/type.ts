@@ -22,3 +22,5 @@ export interface WalletInfo {
   readonly isInstalled?: boolean;
   readonly isMobile?: boolean;
 }
+
+export type DataType = 'bytes' | 'integer';
