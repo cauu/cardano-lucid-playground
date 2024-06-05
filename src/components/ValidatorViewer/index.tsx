@@ -1,5 +1,5 @@
 import { ValidatorDeployer } from '@/src/contract/ValidatorDeployer';
-import { ArgsEditor } from './ArgsEditor';
+import { ArgsEditorPanel } from './ArgsEditorPanel';
 
 interface IProps {
   deployer: ValidatorDeployer;
@@ -15,11 +15,11 @@ export const ValidatorViewer = (props: IProps) => {
   return (
     <div className="flex flex-1 gap-2">
       <div className="flex flex-1">
-        <ArgsEditor schema={datumMeta} />
+        <ArgsEditorPanel schema={datumMeta} />
       </div>
 
       <div className="flex flex-1">
-        <ArgsEditor schema={redeemerMeta} />
+        <ArgsEditorPanel schema={redeemerMeta} />
       </div>
     </div>
   );

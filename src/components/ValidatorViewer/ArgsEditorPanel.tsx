@@ -1,7 +1,8 @@
 import { DataType } from '@/src/common/type';
-import Editor from '@monaco-editor/react';
 import { Tab, Tabs } from '@mui/material';
 import { useState } from 'react';
+
+import { Editor } from './Editor';
 
 interface IProps {
   schema: {
@@ -15,21 +16,17 @@ interface IProps {
   };
 }
 
-export const ArgsEditor = (props: IProps) => {
+export const ArgsEditorPanel = (props: IProps) => {
   const { schema } = props;
 
   const groups = schema.anyOf;
 
   const [tabIndex, setTabIndex] = useState(groups?.[0]?.index || 0);
 
-  const currentFields = groups.find((group) => group.index === tabIndex)?.fields;
+  // const currentFields = groups.find((group) => group.index === tabIndex)?.fields;
 
   const handleChangeTab = (_: React.SyntheticEvent, newValue: number) => {
     setTabIndex(newValue);
-  };
-
-  const handleFieldValueChange = (value: any) => {
-    console.log(value);
   };
 
   return (
@@ -42,13 +39,7 @@ export const ArgsEditor = (props: IProps) => {
       {groups.map((group) => {
         return (
           <div hidden={tabIndex !== group.index}>
-            <Editor
-              width="45vw"
-              height="40vh"
-              defaultLanguage="json"
-              theme="vs-dark"
-              onChange={handleFieldValueChange}
-            />
+            <Editor />
           </div>
         );
       })}
