@@ -1,5 +1,5 @@
 import { Lucid, OutputData, Script, UTxO, toScriptRef } from 'lucid-cardano';
-import { DataType } from '../common/type';
+import { IDatumMeta, IRedeemerMeta } from '../common/type';
 
 export class ValidatorDeployer {
   lucid: Lucid;
@@ -8,25 +8,9 @@ export class ValidatorDeployer {
 
   params: any;
 
-  datumMeta: {
-    title: 'Datum';
-    anyOf: {
-      title: 'Datum';
-      dataType: 'constructor';
-      index: number;
-      fields: { dataType: DataType; title: string }[];
-    }[];
-  };
+  datumMeta: IDatumMeta;
 
-  redeemerMeta: {
-    title: 'Redeemer';
-    anyOf: {
-      title: 'Redeemer';
-      dataType: 'constructor';
-      index: number;
-      fields: { dataType: DataType; title: string }[];
-    }[];
-  };
+  redeemerMeta: IRedeemerMeta;
 
   constructor(
     lucid: Lucid,
@@ -47,6 +31,11 @@ export class ValidatorDeployer {
 
   async deploy(outputData?: OutputData) {
     const validatorAddress = this.lucid.utils.validatorToAddress(this.script);
+
+    console.log('datums', {
+      scriptRef: this.script,
+      ...(outputData || {})
+    });
 
     const tx = await this.lucid
       .newTx()

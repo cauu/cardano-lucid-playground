@@ -30,6 +30,8 @@ export const useValidators = () => {
     try {
       if (!publicKeyHash) return;
 
+      console.log('publicKeyHash', publicKeyHash);
+
       const datum = Data.to(new Constr(0, [publicKeyHash]));
       const utxos = await Promise.all(
         deployers.map((deployer) =>

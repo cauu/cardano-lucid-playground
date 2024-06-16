@@ -1,14 +1,16 @@
 import MonacoEditor, { Monaco } from '@monaco-editor/react';
 // import MonacoEditor from 'react-monaco-editor'
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 
 interface IProps {
-  defaultValue: string;
+  value: string;
+  defaultValue?: string;
+  onChange?: (value: string) => void;
 }
 
 export const Editor = (props: IProps) => {
-  const { defaultValue } = props;
-  const [value, setValue] = useState(defaultValue);
+  const { value, defaultValue, onChange } = props;
+  // const [value, setValue] = useState(defaultValue);
   const monacoRef = useRef<Monaco>();
   const editorRef = useRef<any>();
 
@@ -26,7 +28,7 @@ export const Editor = (props: IProps) => {
   }
 
   const handleFieldValueChange = (value: any) => {
-    setValue(value);
+    onChange?.(value);
   };
 
   return (

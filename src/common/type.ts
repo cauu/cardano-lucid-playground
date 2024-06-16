@@ -24,3 +24,23 @@ export interface WalletInfo {
 }
 
 export type DataType = 'bytes' | 'integer';
+
+export type IDatumMeta = {
+  title: 'Datum';
+  anyOf: {
+    title: 'Datum';
+    dataType: 'constructor';
+    index: number;
+    fields: { dataType: DataType; title: string }[];
+  }[];
+};
+
+export type IRedeemerMeta = {
+  title: 'Redeemer';
+  anyOf: {
+    title: 'Redeemer';
+    dataType: 'constructor';
+    index: number;
+    fields: { dataType: DataType; title: string }[];
+  }[];
+};
