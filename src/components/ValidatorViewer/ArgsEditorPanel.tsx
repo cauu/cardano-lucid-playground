@@ -28,18 +28,6 @@ export const ArgsEditorPanel = (props: IProps) => {
 
   const [tabIndex, setTabIndex] = useState(groups?.[0]?.index || 0);
 
-  // const defaultValue = useMemo(() => {
-  //   const nextIndex = tabIndex;
-  //   const group = groups?.find((group) => group.index === nextIndex);
-
-  //   const _values = group?.fields.reduce((acc: any, field: any) => {
-  //     acc[field.title] = `${DEFAULT_VALUE_MAPPING[field.dataType]}`;
-  //     return acc;
-  //   }, {});
-
-  //   return JSON.stringify(_values);
-  // }, [tabIndex, groups]);
-
   const currDefaultValue = useMemo(() => {
     return JSON.stringify(defaultValue[tabIndex]);
   }, [defaultValue, tabIndex]);
@@ -66,18 +54,6 @@ export const ArgsEditorPanel = (props: IProps) => {
       <div className="relative flex-1 min-h-[40vh]">
         <Editor value={value} defaultValue={currDefaultValue} onChange={handleValueChange} />
       </div>
-      {/* {(groups || []).map((group) => {
-        const defaultValue = group.fields.reduce((acc: any, field: any) => {
-          acc[field.title] = `${DEFAULT_VALUE_MAPPING[field.dataType]}`;
-          return acc;
-        }, {});
-
-        return (
-          <div className="relative flex-1 min-h-[40vh]" hidden={group.index !== tabIndex}>
-            <Editor value={value} defaultValue={JSON.stringify(defaultValue)} onChange={handleValueChange} />
-          </div>
-        );
-      })} */}
     </div>
   );
 };

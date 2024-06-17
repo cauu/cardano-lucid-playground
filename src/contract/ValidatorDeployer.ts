@@ -11,6 +11,8 @@ export class ValidatorDeployer {
 
   script: Script;
 
+  scriptAddress: string;
+
   params: any;
 
   datumMeta: IDatumMeta;
@@ -41,6 +43,7 @@ export class ValidatorDeployer {
     this.datumMeta = datumMeta;
     this.redeemerMeta = redeemerMeta;
 
+    this.scriptAddress = lucid.utils.validatorToAddress(script);
     this.defaultDatumValue = this.initDefaultValue(datumMeta);
     this.defaultRedeemerValue = this.initDefaultValue(redeemerMeta);
   }
@@ -84,6 +87,10 @@ export class ValidatorDeployer {
     }
 
     this.defaultRedeemerValue[index] = value;
+  }
+
+  async getUtxos() {
+    return await this.lucid.utxosAt(this.scriptAddress);
   }
 
   async deploy(outputData?: OutputData) {
