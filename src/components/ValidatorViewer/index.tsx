@@ -6,6 +6,7 @@ import { ValidatorDeployer } from '@/src/contract/ValidatorDeployer';
 
 interface IProps {
   deployer: ValidatorDeployer;
+  onDeploy?: (val: any) => void;
   // schema: IDatumMeta | IRedeemerMeta;
 }
 
@@ -13,7 +14,7 @@ interface IProps {
  * 1. There two main panels for args editor, one for lock and one for redeem
  */
 export const ValidatorViewer = (props: IProps) => {
-  const { deployer } = props;
+  const { deployer, onDeploy } = props;
 
   const [type, setType] = useState('lock');
 
@@ -26,6 +27,14 @@ export const ValidatorViewer = (props: IProps) => {
 
   const redeemerSchema = useMemo(() => {
     return deployer?.redeemerMeta;
+  }, [deployer]);
+
+  const defaultRedeemerValue = useMemo(() => {
+    return deployer?.defaultRedeemerValue;
+  }, [deployer]);
+
+  const defaultDatumValue = useMemo(() => {
+    return deployer?.defaultDatumValue;
   }, [deployer]);
 
   const handleDatumChange = useCallback(
@@ -46,12 +55,14 @@ export const ValidatorViewer = (props: IProps) => {
     setType(value);
   };
 
-  const handleDeploy = async () => {};
+  const handleDeploy = async () => {
+    onDeploy?.(JSON.parse(datumVal));
+  };
 
   return (
     <div className="flex flex-col flex-1 gap-2">
-      <FormControl>
-        <FormLabel>Gender</FormLabel>
+      <FormControl className="!flex !flex-row !items-center gap-4">
+        <FormLabel>Type</FormLabel>
 
         <RadioGroup row onChange={handleTypeChange} value={type}>
           <FormControlLabel value="lock" control={<Radio />} label="Lock" />
@@ -64,7 +75,14 @@ export const ValidatorViewer = (props: IProps) => {
         type === 'lock' ? (
           <div>
             <div className="flex flex-1">
-              {<ArgsEditorPanel value={datumVal} schema={datumSchema} onChange={handleDatumChange} />}
+              {
+                <ArgsEditorPanel
+                  value={datumVal}
+                  defaultValue={defaultDatumValue}
+                  schema={datumSchema}
+                  onChange={handleDatumChange}
+                />
+              }
             </div>
 
             <div className="flex justify-end mt-2">
@@ -81,7 +99,14 @@ export const ValidatorViewer = (props: IProps) => {
         type === 'unlock' ? (
           <div>
             <div className="flex flex-1">
-              {<ArgsEditorPanel value={redeemerVal} schema={redeemerSchema} onChange={handleRedeemerChange} />}
+              {
+                <ArgsEditorPanel
+                  value={redeemerVal}
+                  defaultValue={defaultRedeemerValue}
+                  schema={redeemerSchema}
+                  onChange={handleRedeemerChange}
+                />
+              }
             </div>
 
             <div className="flex justify-end mt-2">

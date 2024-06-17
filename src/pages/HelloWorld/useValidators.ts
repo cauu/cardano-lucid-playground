@@ -17,22 +17,28 @@ export const useValidators = () => {
   const deployers = useMemo(() => {
     if (!lucid) return [];
 
-    return [
-      new ValidatorDeployer(lucid, {
-        script: new HelloWordHelloWorld(),
-        datumMeta: HelloWordHelloWorld.datum,
-        redeemerMeta: HelloWordHelloWorld.redeemer
-      })
-    ];
-  }, [lucid]);
+    const helloWorldDeployer = new ValidatorDeployer(lucid, {
+      script: new HelloWordHelloWorld(),
+      datumMeta: HelloWordHelloWorld.datum,
+      redeemerMeta: HelloWordHelloWorld.redeemer
+    });
 
-  const deploy = async () => {
+    if (publicKeyHash) {
+      helloWorldDeployer.setDefaultDatumValue(0, {
+        owner: publicKeyHash
+      });
+    }
+
+    return [helloWorldDeployer];
+  }, [lucid, publicKeyHash]);
+
+  const deploy = async (val: { owner: string }) => {
     try {
-      if (!publicKeyHash) return;
-
-      console.log('publicKeyHash', publicKeyHash);
-
-      const datum = Data.to(new Constr(0, [publicKeyHash]));
+      if (!val.owner) {
+        throw new Error('Owner is required');
+      }
+      // if (!publicKeyHash) return;
+      const datum = Data.to(new Constr(0, [val.owner]));
       const utxos = await Promise.all(
         deployers.map((deployer) =>
           deployer.deploy({

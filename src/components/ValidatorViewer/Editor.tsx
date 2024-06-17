@@ -10,7 +10,6 @@ interface IProps {
 
 export const Editor = (props: IProps) => {
   const { value, defaultValue, onChange } = props;
-  // const [value, setValue] = useState(defaultValue);
   const monacoRef = useRef<Monaco>();
   const editorRef = useRef<any>();
 
@@ -23,8 +22,8 @@ export const Editor = (props: IProps) => {
     editorRef.current = editor;
 
     setTimeout(() => {
-      editor.getAction('editor.action.formatDocument').run();
-    }, 1000);
+      editor.getAction('editor.action.formatDocument')?.run();
+    }, 100);
   }
 
   const handleFieldValueChange = (value: any) => {

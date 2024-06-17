@@ -1,6 +1,11 @@
 import { Lucid, OutputData, Script, UTxO, toScriptRef } from 'lucid-cardano';
 import { IDatumMeta, IRedeemerMeta } from '../common/type';
 
+const DEFAULT_VALUE_MAPPING: any = {
+  bytes: '',
+  integer: 0
+};
+
 export class ValidatorDeployer {
   lucid: Lucid;
 
@@ -11,6 +16,14 @@ export class ValidatorDeployer {
   datumMeta: IDatumMeta;
 
   redeemerMeta: IRedeemerMeta;
+
+  defaultDatumValue?: {
+    [index: number]: string;
+  };
+
+  defaultRedeemerValue?: {
+    [index: number]: string;
+  };
 
   constructor(
     lucid: Lucid,
@@ -27,15 +40,54 @@ export class ValidatorDeployer {
     this.params = params;
     this.datumMeta = datumMeta;
     this.redeemerMeta = redeemerMeta;
+
+    this.defaultDatumValue = this.initDefaultValue(datumMeta);
+    this.defaultRedeemerValue = this.initDefaultValue(redeemerMeta);
+  }
+
+  initDefaultValue(schema: any) {
+    const groups = schema.anyOf;
+
+    const values: any = {};
+
+    groups.forEach((group: any) => {
+      const index = group.index;
+
+      values[index] = group?.fields.reduce((acc: any, field: any) => {
+        acc[field.title] = `${DEFAULT_VALUE_MAPPING[field.dataType]}`;
+        return acc;
+      }, {});
+    });
+
+    return values;
+  }
+
+  getDefaultDatumValue(index: number) {
+    return this.defaultDatumValue?.[index];
+  }
+
+  getDefaultRedeemerValue(index: number) {
+    return this.defaultRedeemerValue?.[index];
+  }
+
+  setDefaultDatumValue(index: number, value: any) {
+    if (!this.defaultDatumValue) {
+      this.defaultDatumValue = {};
+    }
+
+    this.defaultDatumValue[index] = value;
+  }
+
+  setDefaultRedeemerValue(index: number, value: any) {
+    if (!this.defaultRedeemerValue) {
+      this.defaultRedeemerValue = {};
+    }
+
+    this.defaultRedeemerValue[index] = value;
   }
 
   async deploy(outputData?: OutputData) {
     const validatorAddress = this.lucid.utils.validatorToAddress(this.script);
-
-    console.log('datums', {
-      scriptRef: this.script,
-      ...(outputData || {})
-    });
 
     const tx = await this.lucid
       .newTx()

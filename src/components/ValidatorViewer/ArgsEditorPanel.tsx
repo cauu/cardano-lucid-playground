@@ -4,13 +4,9 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { Editor } from './Editor';
 
-const DEFAULT_VALUE_MAPPING: any = {
-  bytes: '',
-  integer: 0
-};
-
 interface IProps {
   value: string;
+  defaultValue: any;
   schema?: {
     title: string;
     anyOf: {
@@ -24,7 +20,7 @@ interface IProps {
 }
 
 export const ArgsEditorPanel = (props: IProps) => {
-  const { value, schema, onChange } = props;
+  const { value, defaultValue, schema, onChange } = props;
 
   const groups = useMemo(() => {
     return schema?.anyOf;
@@ -32,21 +28,25 @@ export const ArgsEditorPanel = (props: IProps) => {
 
   const [tabIndex, setTabIndex] = useState(groups?.[0]?.index || 0);
 
-  const defaultValue = useMemo(() => {
-    const nextIndex = tabIndex;
-    const group = groups?.find((group) => group.index === nextIndex);
+  // const defaultValue = useMemo(() => {
+  //   const nextIndex = tabIndex;
+  //   const group = groups?.find((group) => group.index === nextIndex);
 
-    const _values = group?.fields.reduce((acc: any, field: any) => {
-      acc[field.title] = `${DEFAULT_VALUE_MAPPING[field.dataType]}`;
-      return acc;
-    }, {});
+  //   const _values = group?.fields.reduce((acc: any, field: any) => {
+  //     acc[field.title] = `${DEFAULT_VALUE_MAPPING[field.dataType]}`;
+  //     return acc;
+  //   }, {});
 
-    return JSON.stringify(_values);
-  }, [tabIndex, groups]);
+  //   return JSON.stringify(_values);
+  // }, [tabIndex, groups]);
+
+  const currDefaultValue = useMemo(() => {
+    return JSON.stringify(defaultValue[tabIndex]);
+  }, [defaultValue, tabIndex]);
 
   useEffect(() => {
-    onChange?.(defaultValue);
-  }, [defaultValue, onChange]);
+    onChange?.(currDefaultValue);
+  }, [currDefaultValue, onChange]);
 
   const handleChangeTab = (_: React.SyntheticEvent, newValue: number) => {
     setTabIndex(newValue);
@@ -64,7 +64,7 @@ export const ArgsEditorPanel = (props: IProps) => {
         })}
       </Tabs>
       <div className="relative flex-1 min-h-[40vh]">
-        <Editor value={value} defaultValue={defaultValue} onChange={handleValueChange} />
+        <Editor value={value} defaultValue={currDefaultValue} onChange={handleValueChange} />
       </div>
       {/* {(groups || []).map((group) => {
         const defaultValue = group.fields.reduce((acc: any, field: any) => {
