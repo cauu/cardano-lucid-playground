@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { Constr, Data } from 'lucid-cardano';
+import { useQuery } from '@tanstack/react-query';
 
 import { HelloWordHelloWorld } from '@/plutus';
 import { useLucid } from '@/src/hooks/useLucid';
@@ -32,6 +33,25 @@ export const useValidators = () => {
     return [helloWorldDeployer];
   }, [lucid, publicKeyHash]);
 
+  const {
+    data: utxos,
+    isLoading,
+    refetch,
+    isRefetching
+  } = useQuery({
+    queryKey: ['getUtxos', 'HelloWorld', publicKeyHash],
+    refetchOnWindowFocus: false,
+    queryFn: async () => {
+      return (await deployers[0].getUtxos()).filter((utxo) => {
+        try {
+          return (Data.from(`${utxo.datum}` || '', Constr) as any)?.fields?.[0] === publicKeyHash;
+        } catch (e) {
+          return false;
+        }
+      });
+    }
+  });
+
   const deploy = async (val: { owner: string }) => {
     try {
       if (!val.owner) {
@@ -39,6 +59,9 @@ export const useValidators = () => {
       }
       // if (!publicKeyHash) return;
       const datum = Data.to(new Constr(0, [val.owner]));
+
+      console.log('testencodeanddecode', datum, Data.from(datum, Constr));
+
       const utxos = await Promise.all(
         deployers.map((deployer) =>
           deployer.deploy({
@@ -53,8 +76,13 @@ export const useValidators = () => {
     }
   };
 
+  console.log('utxos', utxos);
+
   return {
     deployers,
+    utxos,
+    isLoadingUtxos: isLoading || isRefetching,
+    refetchUtxos: refetch,
     deploy
   };
 };

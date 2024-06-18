@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { SnackbarProvider } from 'notistack';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { Router } from './Router';
 import { MainLayout } from './layouts/MainLayout';
@@ -16,13 +17,17 @@ import './index.css';
 //   console.log('greet', res.greet());
 // });
 
+const queryClient = new QueryClient();
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <SnackbarProvider>
       <LucidProvider>
-        <MainLayout>
-          <Router />
-        </MainLayout>
+        <QueryClientProvider client={queryClient}>
+          <MainLayout>
+            <Router />
+          </MainLayout>
+        </QueryClientProvider>
       </LucidProvider>
     </SnackbarProvider>
   </React.StrictMode>

@@ -1,11 +1,14 @@
 import { ChangeEvent, useCallback, useMemo, useState } from 'react';
-import { Button, Radio, RadioGroup, FormControl, FormLabel, FormControlLabel } from '@mui/material';
-import { ArgsEditorPanel } from './ArgsEditorPanel';
-// import { IDatumMeta, IRedeemerMeta } from '@/src/common/type';
+import { UTxO } from 'lucid-cardano';
+import { Radio, RadioGroup, FormControl, FormLabel, FormControlLabel } from '@mui/material';
 import { ValidatorDeployer } from '@/src/contract/ValidatorDeployer';
+import { DatumView } from './DatumView';
+import { RedeemerView } from './RedeemerView';
+// import { IDatumMeta, IRedeemerMeta } from '@/src/common/type';
 
 interface IProps {
   deployer: ValidatorDeployer;
+  utxos: UTxO[];
   onDeploy?: (val: any) => void;
   // schema: IDatumMeta | IRedeemerMeta;
 }
@@ -14,9 +17,9 @@ interface IProps {
  * 1. There two main panels for args editor, one for lock and one for redeem
  */
 export const ValidatorViewer = (props: IProps) => {
-  const { deployer, onDeploy } = props;
+  const { deployer, utxos, onDeploy } = props;
 
-  const [type, setType] = useState('lock');
+  const [operation, setOperation] = useState('lock');
 
   const [datumVal, setDatumVal] = useState('');
   const [redeemerVal, setRedeemerVal] = useState('');
@@ -51,8 +54,8 @@ export const ValidatorViewer = (props: IProps) => {
     [setRedeemerVal]
   );
 
-  const handleTypeChange = (_: ChangeEvent<HTMLInputElement>, value: string) => {
-    setType(value);
+  const handleOperationChange = (_: ChangeEvent<HTMLInputElement>, value: string) => {
+    setOperation(value);
   };
 
   const handleDeploy = async () => {
@@ -64,7 +67,7 @@ export const ValidatorViewer = (props: IProps) => {
       <FormControl className="!flex !flex-row !items-center gap-4">
         <FormLabel>Type</FormLabel>
 
-        <RadioGroup row onChange={handleTypeChange} value={type}>
+        <RadioGroup row onChange={handleOperationChange} value={operation}>
           <FormControlLabel value="lock" control={<Radio />} label="Lock" />
           <FormControlLabel value="unlock" control={<Radio />} label="Unlock" />
         </RadioGroup>
@@ -72,47 +75,28 @@ export const ValidatorViewer = (props: IProps) => {
 
       {
         // Datum view
-        type === 'lock' ? (
-          <div>
-            <div className="flex flex-1">
-              {
-                <ArgsEditorPanel
-                  value={datumVal}
-                  defaultValue={defaultDatumValue}
-                  schema={datumSchema}
-                  onChange={handleDatumChange}
-                />
-              }
-            </div>
-
-            <div className="flex justify-end mt-2">
-              <Button variant="outlined" onClick={handleDeploy}>
-                Deploy
-              </Button>
-            </div>
-          </div>
+        operation === 'lock' ? (
+          <DatumView
+            value={datumVal}
+            defaultValue={defaultDatumValue}
+            schema={datumSchema}
+            onChange={handleDatumChange}
+            onDeploy={handleDeploy}
+          />
         ) : null
       }
 
       {
         // Redeemer view
-        type === 'unlock' ? (
-          <div>
-            <div className="flex flex-1">
-              {
-                <ArgsEditorPanel
-                  value={redeemerVal}
-                  defaultValue={defaultRedeemerValue}
-                  schema={redeemerSchema}
-                  onChange={handleRedeemerChange}
-                />
-              }
-            </div>
-
-            <div className="flex justify-end mt-2">
-              <Button variant="outlined">Unlock</Button>
-            </div>
-          </div>
+        operation === 'unlock' ? (
+          <RedeemerView
+            utxos={utxos}
+            value={redeemerVal}
+            defaultValue={defaultRedeemerValue}
+            schema={redeemerSchema}
+            onChange={handleRedeemerChange}
+            onUnlock={() => {}}
+          />
         ) : null
       }
     </div>
