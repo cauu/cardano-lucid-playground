@@ -2,6 +2,7 @@ import { Button } from '@mui/material';
 import { UTxO } from 'lucid-cardano';
 
 import { IRedeemerMeta } from '@/src/common/type';
+import { UTxOSelector } from '@/src/components/UTxOSelector';
 import { ArgsEditorPanel } from './ArgsEditorPanel';
 
 interface IProps {
@@ -24,15 +25,10 @@ export const RedeemerView = (props: IProps) => {
         {<ArgsEditorPanel value={value} defaultValue={defaultValue} schema={schema} onChange={onChange} />}
       </div>
 
-      <div>
+      <div className="flex flex-col gap-2 mt-4">
+        <div className="text-xl font-[600]">UTxOs</div>
         {utxos?.map((utxo) => {
-          return (
-            <div>
-              {/* <div>{utxo.address}</div> */}
-              <div>{utxo.txHash}</div>
-              {/* <div>{utxo.txHash}</div> */}
-            </div>
-          );
+          return <UTxOSelector key={utxo.txHash} utxo={utxo} />;
         })}
       </div>
 
