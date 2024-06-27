@@ -1,9 +1,9 @@
 import { Popover } from '@mui/material';
-import { UTxO } from 'lucid-cardano';
+import { IUTxO } from '@/src/common/type';
 import { useState } from 'react';
 
 interface IProps {
-  utxo: UTxO;
+  utxo: IUTxO;
 }
 
 export const UTxOSelector = (props: IProps) => {
@@ -57,16 +57,8 @@ export const UTxOSelector = (props: IProps) => {
           })}
         </div>
         {utxo.datum ? <button onClick={handleShowDatum}>Datum</button> : null}
-        <Popover
-          open={open}
-          onClose={handleCloseDatum}
-          anchorEl={anchorEl}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left'
-          }}
-        >
-          <div className="p-4 w-80 text-wrap">{utxo.datum}</div>
+        <Popover open={open} onClose={handleCloseDatum} anchorEl={anchorEl}>
+          <div className="p-4 w-80 text-wrap break-words">{JSON.stringify(utxo.datumDecoded)}</div>
         </Popover>
         {/* ) : null} */}
       </div>

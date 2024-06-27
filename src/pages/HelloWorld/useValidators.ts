@@ -42,13 +42,20 @@ export const useValidators = () => {
     queryKey: ['getUtxos', 'HelloWorld', publicKeyHash],
     refetchOnWindowFocus: false,
     queryFn: async () => {
-      return (await deployers[0].getUtxos()).filter((utxo) => {
-        try {
-          return (Data.from(`${utxo.datum}` || '', Constr) as any)?.fields?.[0] === publicKeyHash;
-        } catch (e) {
-          return false;
-        }
-      });
+      return (await deployers[0].getUtxos())
+        .filter((utxo) => {
+          try {
+            return (Data.from(`${utxo.datum}` || '', Constr) as any)?.fields?.[0] === publicKeyHash;
+          } catch (e) {
+            return false;
+          }
+        })
+        .map((utxo) => {
+          return {
+            ...utxo,
+            datumDecoded: Data.from(`${utxo.datum}`, Constr)
+          };
+        });
     }
   });
 

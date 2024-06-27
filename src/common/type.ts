@@ -1,3 +1,5 @@
+import { UTxO } from 'lucid-cardano';
+
 export enum SupportedWallet {
   eternl = 'eternl',
   flint = 'flint',
@@ -43,4 +45,8 @@ export type IRedeemerMeta = {
     index: number;
     fields: { dataType: DataType; title: string }[];
   }[];
+};
+
+export type IUTxO = UTxO & {
+  datumDecoded: any;
 };

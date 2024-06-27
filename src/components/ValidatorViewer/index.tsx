@@ -1,14 +1,14 @@
 import { ChangeEvent, useCallback, useMemo, useState } from 'react';
-import { UTxO } from 'lucid-cardano';
 import { Radio, RadioGroup, FormControl, FormLabel, FormControlLabel } from '@mui/material';
 import { ValidatorDeployer } from '@/src/contract/ValidatorDeployer';
+import { IUTxO } from '@/src/common/type';
 import { DatumView } from './DatumView';
 import { RedeemerView } from './RedeemerView';
 // import { IDatumMeta, IRedeemerMeta } from '@/src/common/type';
 
 interface IProps {
   deployer: ValidatorDeployer;
-  utxos: UTxO[];
+  utxos: IUTxO[];
   onDeploy?: (val: any) => void;
   // schema: IDatumMeta | IRedeemerMeta;
 }

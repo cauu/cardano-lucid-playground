@@ -1,12 +1,11 @@
 import { Button } from '@mui/material';
-import { UTxO } from 'lucid-cardano';
 
-import { IRedeemerMeta } from '@/src/common/type';
+import { IRedeemerMeta, IUTxO } from '@/src/common/type';
 import { UTxOSelector } from '@/src/components/UTxOSelector';
 import { ArgsEditorPanel } from './ArgsEditorPanel';
 
 interface IProps {
-  utxos: UTxO[];
+  utxos: IUTxO[];
   value: string;
   defaultValue?: {
     [index: number]: string;
