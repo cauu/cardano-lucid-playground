@@ -1,19 +1,21 @@
-import { Popover } from '@mui/material';
+import classNames from 'classnames';
+import { Popover, Checkbox } from '@mui/material';
 import { IUTxO } from '@/src/common/type';
 import { useState } from 'react';
 
 interface IProps {
   utxo: IUTxO;
+  onSelect?: (utxo: IUTxO) => void;
+  onUnselect?: (utxo: IUTxO) => void;
 }
 
 export const UTxOSelector = (props: IProps) => {
-  const { utxo } = props;
+  const { utxo, onSelect, onUnselect } = props;
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [isSelected, setIsSelected] = useState(false);
 
   const open = Boolean(anchorEl);
-
-  console.log('utxo', !!utxo.datum);
 
   const txUrl = `https://cardanoscan.io/transaction/${utxo.txHash}`;
   const addressUrl = `https://cardanoscan.io/address/${utxo.address}`;
@@ -26,10 +28,25 @@ export const UTxOSelector = (props: IProps) => {
     setAnchorEl(null);
   };
 
+  const handleChecked = (_: any, checked: boolean) => {
+    setIsSelected(checked);
+    if (checked) {
+      onSelect?.(utxo);
+    } else {
+      onUnselect?.(utxo);
+    }
+  };
+
   return (
-    <div className="flex justify-between border p-4">
+    <div
+      className={classNames('flex justify-between border p-4', {
+        ['border-blue-500']: isSelected
+      })}
+    >
       <div className="flex items-center gap-2">
-        <div>Radio</div>
+        <div>
+          <Checkbox checked={isSelected} onChange={handleChecked} />
+        </div>
         <div>
           <div className="text-sm mb-2">
             <div>Transaction</div>
@@ -56,7 +73,11 @@ export const UTxOSelector = (props: IProps) => {
             );
           })}
         </div>
-        {utxo.datum ? <button onClick={handleShowDatum}>Datum</button> : null}
+        {utxo.datum ? (
+          <button className="text-blue-700" onClick={handleShowDatum}>
+            Datum
+          </button>
+        ) : null}
         <Popover open={open} onClose={handleCloseDatum} anchorEl={anchorEl}>
           <div className="p-4 w-80 text-wrap break-words">{JSON.stringify(utxo.datumDecoded)}</div>
         </Popover>

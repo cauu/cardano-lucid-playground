@@ -67,8 +67,6 @@ export const useValidators = () => {
       // if (!publicKeyHash) return;
       const datum = Data.to(new Constr(0, [val.owner]));
 
-      console.log('testencodeanddecode', datum, Data.from(datum, Constr));
-
       const utxos = await Promise.all(
         deployers.map((deployer) =>
           deployer.deploy({

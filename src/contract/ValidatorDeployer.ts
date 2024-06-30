@@ -1,4 +1,4 @@
-import { Lucid, OutputData, Script, UTxO, toScriptRef } from 'lucid-cardano';
+import { Lucid, OutputData, Script, Tx, UTxO, toScriptRef } from 'lucid-cardano';
 import { IDatumMeta, IRedeemerMeta } from '../common/type';
 
 const DEFAULT_VALUE_MAPPING: any = {
@@ -139,5 +139,24 @@ export class ValidatorDeployer {
     };
 
     return newUtxo;
+  }
+
+  async unlock(utxos: UTxO[], redeemer: any, processTx?: (tx: Tx) => Tx) {
+    /**
+     * There are 4 types of validators:
+     * 1. publish validator
+     * 2. mint validator
+     * 3. spending validator
+     * 4. withdraw validator
+     */
+    let tx = await this.lucid.newTx();
+
+    tx.collectFrom(utxos, redeemer);
+
+    tx = processTx?.(tx) || tx;
+
+    const signedTx = await (await tx.complete()).sign().complete();
+
+    return signedTx.submit();
   }
 }

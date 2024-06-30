@@ -8,6 +8,7 @@ import { RedeemerView } from './RedeemerView';
 
 interface IProps {
   deployer: ValidatorDeployer;
+  isLoadingUtxos: boolean;
   utxos: IUTxO[];
   onDeploy?: (val: any) => void;
   // schema: IDatumMeta | IRedeemerMeta;
@@ -17,7 +18,7 @@ interface IProps {
  * 1. There two main panels for args editor, one for lock and one for redeem
  */
 export const ValidatorViewer = (props: IProps) => {
-  const { deployer, utxos, onDeploy } = props;
+  const { deployer, utxos, isLoadingUtxos, onDeploy } = props;
 
   const [operation, setOperation] = useState('lock');
 
@@ -91,6 +92,7 @@ export const ValidatorViewer = (props: IProps) => {
         operation === 'unlock' ? (
           <RedeemerView
             utxos={utxos}
+            isLoadingUtxos={isLoadingUtxos}
             value={redeemerVal}
             defaultValue={defaultRedeemerValue}
             schema={redeemerSchema}

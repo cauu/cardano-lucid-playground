@@ -1,4 +1,5 @@
-import { Button } from '@mui/material';
+import { useState } from 'react';
+import { Button, CircularProgress } from '@mui/material';
 
 import { IRedeemerMeta, IUTxO } from '@/src/common/type';
 import { UTxOSelector } from '@/src/components/UTxOSelector';
@@ -6,6 +7,7 @@ import { ArgsEditorPanel } from './ArgsEditorPanel';
 
 interface IProps {
   utxos: IUTxO[];
+  isLoadingUtxos: boolean;
   value: string;
   defaultValue?: {
     [index: number]: string;
@@ -16,7 +18,33 @@ interface IProps {
 }
 
 export const RedeemerView = (props: IProps) => {
-  const { value, utxos, defaultValue, schema, onChange, onUnlock } = props;
+  const { value, utxos, isLoadingUtxos, defaultValue, schema, onChange, onUnlock } = props;
+
+  const [selectedUtxos, setSelectedUtxos] = useState<IUTxO[]>([]);
+
+  const handleSelect = (utxo: IUTxO) => {
+    setSelectedUtxos((prevs) => {
+      if (selectedUtxos.find((prev) => prev.txHash + prev.outputIndex === utxo.txHash + utxo.outputIndex)) {
+        return prevs;
+      }
+
+      return [...prevs, utxo];
+    });
+  };
+
+  const handleUnselect = (utxo: IUTxO) => {
+    setSelectedUtxos((prevs) => {
+      const index = selectedUtxos.findIndex(
+        (prev) => prev.txHash + prev.outputIndex === utxo.txHash + utxo.outputIndex
+      );
+
+      if (index >= 0) {
+        return prevs.slice(0, index).concat(prevs.slice(index + 1));
+      }
+
+      return prevs;
+    });
+  };
 
   return (
     <div>
@@ -26,8 +54,13 @@ export const RedeemerView = (props: IProps) => {
 
       <div className="flex flex-col gap-2 mt-4">
         <div className="text-xl font-[600]">UTxOs</div>
+        {isLoadingUtxos && (
+          <div>
+            <CircularProgress />
+          </div>
+        )}
         {utxos?.map((utxo) => {
-          return <UTxOSelector key={utxo.txHash} utxo={utxo} />;
+          return <UTxOSelector key={utxo.txHash} utxo={utxo} onSelect={handleSelect} onUnselect={handleUnselect} />;
         })}
       </div>
 
