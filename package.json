@@ -40,7 +40,8 @@
     "tailwind-merge": "^2.2.1",
     "test-npm-crate": "^0.3.0",
     "vite-plugin-top-level-await": "^1.4.1",
-    "vite-plugin-wasm": "^3.3.0"
+    "vite-plugin-wasm": "^3.3.0",
+    "web3": "^4.10.0"
   },
   "devDependencies": {
     "@types/node": "^20.12.10",

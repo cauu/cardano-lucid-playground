@@ -5,6 +5,8 @@ import { useQuery } from '@tanstack/react-query';
 import { HelloWordHelloWorld } from '@/plutus';
 import { useLucid } from '@/src/hooks/useLucid';
 import { ValidatorDeployer } from '@/src/contract/ValidatorDeployer';
+import { IUTxO } from '@/src/common/type';
+import { utf8ToHex } from '@/src/utils/utils';
 
 export const useValidators = () => {
   const { lucid, walletAddress } = useLucid();
@@ -81,13 +83,27 @@ export const useValidators = () => {
     }
   };
 
-  console.log('utxos', utxos);
+  const unlock = async (utxos: IUTxO[], redeemer: { msg: string }) => {
+    console.log('unlockunlock', redeemer, typeof redeemer, utf8ToHex(redeemer.msg));
+    const redeemerData = Data.to(new Constr(0, [utf8ToHex(redeemer.msg)]));
+
+    const responseTxs = await Promise.all(
+      deployers.map((deployer) =>
+        deployer.unlock(utxos, redeemerData, (tx) => {
+          return tx.addSigner(walletAddress).attachSpendingValidator(deployer.script);
+        })
+      )
+    );
+
+    return responseTxs;
+  };
 
   return {
     deployers,
     utxos,
     isLoadingUtxos: isLoading || isRefetching,
     refetchUtxos: refetch,
-    deploy
+    deploy,
+    unlock
   };
 };

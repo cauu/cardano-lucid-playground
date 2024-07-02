@@ -11,6 +11,7 @@ interface IProps {
   isLoadingUtxos: boolean;
   utxos: IUTxO[];
   onDeploy?: (val: any) => void;
+  onUnlock?: (utxos: IUTxO[], redeemer: any) => void;
   // schema: IDatumMeta | IRedeemerMeta;
 }
 
@@ -18,7 +19,7 @@ interface IProps {
  * 1. There two main panels for args editor, one for lock and one for redeem
  */
 export const ValidatorViewer = (props: IProps) => {
-  const { deployer, utxos, isLoadingUtxos, onDeploy } = props;
+  const { deployer, utxos, isLoadingUtxos, onDeploy, onUnlock } = props;
 
   const [operation, setOperation] = useState('lock');
 
@@ -63,6 +64,10 @@ export const ValidatorViewer = (props: IProps) => {
     onDeploy?.(JSON.parse(datumVal));
   };
 
+  const handleUnlock = async (utxos: IUTxO[], redeemerVal: any) => {
+    onUnlock?.(utxos, redeemerVal);
+  };
+
   return (
     <div className="flex flex-col flex-1 gap-2">
       <FormControl className="!flex !flex-row !items-center gap-4">
@@ -97,7 +102,7 @@ export const ValidatorViewer = (props: IProps) => {
             defaultValue={defaultRedeemerValue}
             schema={redeemerSchema}
             onChange={handleRedeemerChange}
-            onUnlock={() => {}}
+            onUnlock={handleUnlock}
           />
         ) : null
       }

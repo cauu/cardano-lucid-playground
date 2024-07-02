@@ -141,7 +141,7 @@ export class ValidatorDeployer {
     return newUtxo;
   }
 
-  async unlock(utxos: UTxO[], redeemer: any, processTx?: (tx: Tx) => Tx) {
+  async unlock(_utxos: UTxO[], redeemer: any, processTx?: (tx: Tx) => Tx) {
     /**
      * There are 4 types of validators:
      * 1. publish validator
@@ -149,13 +149,29 @@ export class ValidatorDeployer {
      * 3. spending validator
      * 4. withdraw validator
      */
+    const utxos = await this.lucid.utxosByOutRef([
+      {
+        txHash: _utxos[0].txHash,
+        outputIndex: _utxos[0].outputIndex
+      }
+    ]);
+
     let tx = await this.lucid.newTx();
 
     tx.collectFrom(utxos, redeemer);
 
     tx = processTx?.(tx) || tx;
 
+    // const tx = await this.lucid
+    //   .newTx()
+    //   .collectFrom([utxo], redeemer)
+    //   .addSigner(await this.lucid.wallet.address())
+    //   .attachSpendingValidator(this.script)
+    //   .complete();
+
     const signedTx = await (await tx.complete()).sign().complete();
+
+    console.log('unlock4', signedTx);
 
     return signedTx.submit();
   }

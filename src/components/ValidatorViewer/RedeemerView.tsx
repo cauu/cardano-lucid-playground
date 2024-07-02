@@ -14,7 +14,7 @@ interface IProps {
   };
   schema: IRedeemerMeta;
   onChange: (val: string) => void;
-  onUnlock: () => void;
+  onUnlock: (utxos: IUTxO[], redeemer: any) => void;
 }
 
 export const RedeemerView = (props: IProps) => {
@@ -46,6 +46,10 @@ export const RedeemerView = (props: IProps) => {
     });
   };
 
+  const handleUnlock = () => {
+    onUnlock?.(selectedUtxos, JSON.parse(value));
+  };
+
   return (
     <div>
       <div className="flex flex-1">
@@ -65,7 +69,7 @@ export const RedeemerView = (props: IProps) => {
       </div>
 
       <div className="flex justify-end mt-2">
-        <Button variant="outlined" onClick={onUnlock}>
+        <Button variant="outlined" onClick={handleUnlock}>
           Unlock
         </Button>
       </div>
