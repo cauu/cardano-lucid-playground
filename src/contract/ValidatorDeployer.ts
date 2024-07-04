@@ -101,7 +101,7 @@ export class ValidatorDeployer {
       .payToContract(
         validatorAddress,
         {
-          scriptRef: this.script,
+          // scriptRef: this.script,
           ...(outputData || {})
         },
         /**
@@ -149,12 +149,7 @@ export class ValidatorDeployer {
      * 3. spending validator
      * 4. withdraw validator
      */
-    const utxos = await this.lucid.utxosByOutRef([
-      {
-        txHash: _utxos[0].txHash,
-        outputIndex: _utxos[0].outputIndex
-      }
-    ]);
+    const utxos = await this.lucid.utxosByOutRef(_utxos);
 
     let tx = await this.lucid.newTx();
 

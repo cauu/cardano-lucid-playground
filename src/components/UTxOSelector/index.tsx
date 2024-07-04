@@ -78,6 +78,7 @@ export const UTxOSelector = (props: IProps) => {
             Datum
           </button>
         ) : null}
+        {utxo.scriptRef ? <button className="text-blue-700">Has Script</button> : null}
         <Popover open={open} onClose={handleCloseDatum} anchorEl={anchorEl}>
           <div className="p-4 w-80 text-wrap break-words">{JSON.stringify(utxo.datumDecoded)}</div>
         </Popover>

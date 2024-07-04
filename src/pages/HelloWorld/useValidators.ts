@@ -84,13 +84,22 @@ export const useValidators = () => {
   };
 
   const unlock = async (utxos: IUTxO[], redeemer: { msg: string }) => {
-    console.log('unlockunlock', redeemer, typeof redeemer, utf8ToHex(redeemer.msg));
     const redeemerData = Data.to(new Constr(0, [utf8ToHex(redeemer.msg)]));
+
+    const scriptInconsistent = utxos.some((utxo) => !!utxo.scriptRef) && !utxos.every((utxo) => !!utxo.scriptRef);
+
+    if (scriptInconsistent) {
+      throw new Error('Script inconsistent');
+    }
 
     const responseTxs = await Promise.all(
       deployers.map((deployer) =>
         deployer.unlock(utxos, redeemerData, (tx) => {
+          if (utxos.every((utxo) => !!utxo.scriptRef)) {
+            return tx.addSigner(walletAddress);
+          }
           return tx.addSigner(walletAddress).attachSpendingValidator(deployer.script);
+          // .attachSpendingValidator(deployer.script);
         })
       )
     );
