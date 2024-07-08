@@ -1,4 +1,4 @@
-import { Lucid, OutputData, Script, Tx, UTxO, toScriptRef } from 'lucid-cardano';
+import { Assets, Lucid, OutputData, Script, Tx, UTxO, toScriptRef } from 'lucid-cardano';
 import { IDatumMeta, IRedeemerMeta } from '../common/type';
 
 const DEFAULT_VALUE_MAPPING: any = {
@@ -93,7 +93,7 @@ export class ValidatorDeployer {
     return await this.lucid.utxosAt(this.scriptAddress);
   }
 
-  async deploy(outputData?: OutputData) {
+  async deploy(outputData: OutputData, assets?: Assets) {
     const validatorAddress = this.lucid.utils.validatorToAddress(this.script);
 
     const tx = await this.lucid
@@ -101,7 +101,7 @@ export class ValidatorDeployer {
       .payToContract(
         validatorAddress,
         {
-          // scriptRef: this.script,
+          scriptRef: this.script,
           ...(outputData || {})
         },
         /**
@@ -109,7 +109,9 @@ export class ValidatorDeployer {
          *  Last argument used for?
          * How may assets is locked into this validator
          **/
-        {}
+        {
+          ...(assets || {})
+        }
       )
       .complete();
 
@@ -125,6 +127,8 @@ export class ValidatorDeployer {
     const signedTx = await tx.sign().complete();
 
     const txHash = await signedTx.submit();
+
+    console.log('newTxoutput', newTxOutput, finalOutputs, tx);
 
     const newUtxo: UTxO = {
       address: newTxOutput.address,
