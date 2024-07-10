@@ -29,6 +29,42 @@
       "hash": "c1fe430f19ac248a8a7ea47db106002c4327e542c3fdc60ad6481103"
     },
     {
+      "title": "oneshot.gift_card",
+      "redeemer": {
+        "title": "rdmr",
+        "schema": {
+          "$ref": "#/definitions/oneshot~1Action"
+        }
+      },
+      "parameters": [
+        {
+          "title": "token_name",
+          "schema": {
+            "$ref": "#/definitions/ByteArray"
+          }
+        },
+        {
+          "title": "utxo_ref",
+          "schema": {
+            "$ref": "#/definitions/aiken~1transaction~1OutputReference"
+          }
+        }
+      ],
+      "compiledCode": "58ad01000032323232323223222323225333008323232533300b3006300c3754002264646464a66601e601460206ea802c5288a513756602460266026602660260046eb0c044004c038dd50019bae300f300d37540022c601c601e004601a00260146ea80045261365632533300730020011533300a300937540062930b0a99980399b874800800454ccc028c024dd50018a4c2c2c600e6ea8008dc3a40006eb80055cd2ab9d5573caae7d5d0aba21",
+      "hash": "3eb3c7c613b9d3f518e37471dfedb3f785059b75a23792683f9b5554"
+    },
+    {
+      "title": "simplest_mint.simplest_mint",
+      "redeemer": {
+        "title": "_rdmr",
+        "schema": {
+          "$ref": "#/definitions/Data"
+        }
+      },
+      "compiledCode": "51010000322253330034a229309b2b2b9a01",
+      "hash": "d8906ca5c7ba124a0407a32dab37b2c82b13b3dcd9111e42940dcea4"
+    },
+    {
       "title": "vesting.vesting",
       "datum": {
         "title": "datum",
@@ -50,6 +86,10 @@
     "ByteArray": {
       "dataType": "bytes"
     },
+    "Data": {
+      "title": "Data",
+      "description": "Any Plutus data."
+    },
     "Int": {
       "dataType": "integer"
     },
@@ -61,6 +101,44 @@
           "dataType": "constructor",
           "index": 0,
           "fields": []
+        }
+      ]
+    },
+    "aiken/transaction/OutputReference": {
+      "title": "OutputReference",
+      "description": "An `OutputReference` is a unique reference to an output on-chain. The `output_index`\n corresponds to the position in the output list of the transaction (identified by its id)\n that produced that output",
+      "anyOf": [
+        {
+          "title": "OutputReference",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "transaction_id",
+              "$ref": "#/definitions/aiken~1transaction~1TransactionId"
+            },
+            {
+              "title": "output_index",
+              "$ref": "#/definitions/Int"
+            }
+          ]
+        }
+      ]
+    },
+    "aiken/transaction/TransactionId": {
+      "title": "TransactionId",
+      "description": "A unique transaction identifier, as the hash of a transaction body. Note that the transaction id\n isn't a direct hash of the `Transaction` as visible on-chain. Rather, they correspond to hash\n digests of transaction body as they are serialized on the network.",
+      "anyOf": [
+        {
+          "title": "TransactionId",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "hash",
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
         }
       ]
     },
@@ -93,6 +171,23 @@
               "$ref": "#/definitions/ByteArray"
             }
           ]
+        }
+      ]
+    },
+    "oneshot/Action": {
+      "title": "Action",
+      "anyOf": [
+        {
+          "title": "CheckMint",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": []
+        },
+        {
+          "title": "CheckBurn",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": []
         }
       ]
     },

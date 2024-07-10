@@ -4,6 +4,7 @@ import { MainLayout } from './layouts/MainLayout';
 
 import { HelloWorld } from './pages/HelloWorld';
 import { Vesting } from './pages/Vesting';
+import { SimplestMint } from './pages/SimplestMint';
 import NotFound from './pages/404';
 
 const routerConfig: RouteObject[] = [
@@ -18,6 +19,10 @@ const routerConfig: RouteObject[] = [
       {
         path: 'hello-world',
         element: <HelloWorld />
+      },
+      {
+        path: 'simplest-mint',
+        element: <SimplestMint />
       },
       {
         path: 'vesting',

@@ -28,6 +28,80 @@ export const HelloWordHelloWorld = Object.assign(
   }
 ) as unknown as HelloWordHelloWorld;
 
+export interface OneshotGiftCard {
+  new (tokenName: string, utxoRef: { transactionId: { hash: string }; outputIndex: bigint }): Validator;
+  rdmr: 'CheckMint' | 'CheckBurn';
+}
+
+export const OneshotGiftCard = Object.assign(
+  function (tokenName: string, utxoRef: { transactionId: { hash: string }; outputIndex: bigint }) {
+    return {
+      type: 'PlutusV2',
+      script: applyParamsToScript(
+        '58ad01000032323232323223222323225333008323232533300b3006300c3754002264646464a66601e601460206ea802c5288a513756602460266026602660260046eb0c044004c038dd50019bae300f300d37540022c601c601e004601a00260146ea80045261365632533300730020011533300a300937540062930b0a99980399b874800800454ccc028c024dd50018a4c2c2c600e6ea8008dc3a40006eb80055cd2ab9d5573caae7d5d0aba21',
+        [tokenName, utxoRef],
+        {
+          dataType: 'list',
+          items: [
+            { dataType: 'bytes' },
+            {
+              title: 'OutputReference',
+              description:
+                'An `OutputReference` is a unique reference to an output on-chain. The `output_index`\n corresponds to the position in the output list of the transaction (identified by its id)\n that produced that output',
+              anyOf: [
+                {
+                  title: 'OutputReference',
+                  dataType: 'constructor',
+                  index: 0,
+                  fields: [
+                    {
+                      title: 'transactionId',
+                      description:
+                        "A unique transaction identifier, as the hash of a transaction body. Note that the transaction id\n isn't a direct hash of the `Transaction` as visible on-chain. Rather, they correspond to hash\n digests of transaction body as they are serialized on the network.",
+                      anyOf: [
+                        {
+                          title: 'TransactionId',
+                          dataType: 'constructor',
+                          index: 0,
+                          fields: [{ dataType: 'bytes', title: 'hash' }]
+                        }
+                      ]
+                    },
+                    { dataType: 'integer', title: 'outputIndex' }
+                  ]
+                }
+              ]
+            }
+          ]
+        } as any
+      )
+    };
+  },
+
+  {
+    rdmr: {
+      title: 'Action',
+      anyOf: [
+        { title: 'CheckMint', dataType: 'constructor', index: 0, fields: [] },
+        { title: 'CheckBurn', dataType: 'constructor', index: 1, fields: [] }
+      ]
+    }
+  }
+) as unknown as OneshotGiftCard;
+
+export interface SimplestMintSimplestMint {
+  new (): Validator;
+  _rdmr: Data;
+}
+
+export const SimplestMintSimplestMint = Object.assign(
+  function () {
+    return { type: 'PlutusV2', script: '51010000322253330034a229309b2b2b9a01' };
+  },
+
+  { _rdmr: { title: 'Data', description: 'Any Plutus data.' } }
+) as unknown as SimplestMintSimplestMint;
+
 export interface VestingVesting {
   new (): Validator;
   datum: { lockUntil: bigint; owner: string; beneficiary: string };

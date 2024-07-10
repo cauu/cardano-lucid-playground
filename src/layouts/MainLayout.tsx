@@ -6,6 +6,10 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 const menus = [
   {
+    title: 'Simplest Mint',
+    path: '/simplest-mint'
+  },
+  {
     title: 'Hello, World!',
     path: '/hello-world'
   },

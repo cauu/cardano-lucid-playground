@@ -1,4 +1,4 @@
-import { Assets, Lucid, OutputData, Script, Tx, UTxO, toScriptRef } from 'lucid-cardano';
+import { Assets, Lucid, OutputData, Script, Tx, UTxO, toScriptRef, fromText, Data } from 'lucid-cardano';
 import { IDatumMeta, IRedeemerMeta } from '../common/type';
 
 const DEFAULT_VALUE_MAPPING: any = {
@@ -31,8 +31,8 @@ export class ValidatorDeployer {
     lucid: Lucid,
     validator: {
       script: Script;
-      datumMeta: any;
-      redeemerMeta: any;
+      datumMeta?: any;
+      redeemerMeta?: any;
       params?: any;
     }
   ) {
@@ -44,8 +44,8 @@ export class ValidatorDeployer {
     this.redeemerMeta = redeemerMeta;
 
     this.scriptAddress = lucid.utils.validatorToAddress(script);
-    this.defaultDatumValue = this.initDefaultValue(datumMeta);
-    this.defaultRedeemerValue = this.initDefaultValue(redeemerMeta);
+    this.defaultDatumValue = datumMeta ? this.initDefaultValue(datumMeta) : {};
+    this.defaultRedeemerValue = redeemerMeta ? this.initDefaultValue(redeemerMeta) : {};
   }
 
   initDefaultValue(schema: any) {
@@ -161,16 +161,26 @@ export class ValidatorDeployer {
 
     tx = processTx?.(tx) || tx;
 
-    // const tx = await this.lucid
-    //   .newTx()
-    //   .collectFrom([utxo], redeemer)
-    //   .addSigner(await this.lucid.wallet.address())
-    //   .attachSpendingValidator(this.script)
-    //   .complete();
-
     const signedTx = await (await tx.complete()).sign().complete();
 
     console.log('unlock4', signedTx);
+
+    return signedTx.submit();
+  }
+
+  async mint(_assets: { [key: string]: bigint }) {
+    const policyId = this.lucid.utils.validatorToScriptHash(this.script);
+
+    const tx = await this.lucid.newTx();
+
+    const assets: any = {};
+    Object.keys(_assets).forEach((key) => {
+      assets[`${policyId}${fromText(key)}`] = BigInt(_assets[key]);
+    });
+
+    const signedTx = await (await tx.attachMintingPolicy(this.script).mintAssets(assets, Data.void()).complete())
+      .sign()
+      .complete();
 
     return signedTx.submit();
   }
