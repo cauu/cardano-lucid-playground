@@ -29,6 +29,25 @@
       "hash": "c1fe430f19ac248a8a7ea47db106002c4327e542c3fdc60ad6481103"
     },
     {
+      "title": "mint_guessword.mint",
+      "redeemer": {
+        "title": "redeemer",
+        "schema": {
+          "$ref": "#/definitions/mint_guessword~1CoolTokenRedeemer"
+        }
+      },
+      "parameters": [
+        {
+          "title": "code_word",
+          "schema": {
+            "$ref": "#/definitions/ByteArray"
+          }
+        }
+      ],
+      "compiledCode": "5858010000323232323232232232253330063371e6eb8c028c020dd50018020a4c26caca66600866e1d20003005375400226464a66601260160042930b1bae3009001300637540022c6eb80055cd2ab9d5573caae7d5d0aba201",
+      "hash": "9d870ab5acc5e274aed43f6db592684d1471e9ff75d5c301a5235ff3"
+    },
+    {
       "title": "oneshot.gift_card",
       "redeemer": {
         "title": "rdmr",
@@ -168,6 +187,22 @@
           "fields": [
             {
               "title": "msg",
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
+        }
+      ]
+    },
+    "mint_guessword/CoolTokenRedeemer": {
+      "title": "CoolTokenRedeemer",
+      "anyOf": [
+        {
+          "title": "CoolTokenRedeemer",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "guessed_word",
               "$ref": "#/definitions/ByteArray"
             }
           ]

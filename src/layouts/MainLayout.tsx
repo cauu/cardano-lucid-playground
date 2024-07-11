@@ -10,6 +10,10 @@ const menus = [
     path: '/simplest-mint'
   },
   {
+    title: 'Mint By Guessword',
+    path: '/mint-by-guessword'
+  },
+  {
     title: 'Hello, World!',
     path: '/hello-world'
   },

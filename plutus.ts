@@ -28,6 +28,38 @@ export const HelloWordHelloWorld = Object.assign(
   }
 ) as unknown as HelloWordHelloWorld;
 
+export interface MintGuesswordMint {
+  new (codeWord: string): Validator;
+  redeemer: { guessedWord: string };
+}
+
+export const MintGuesswordMint = Object.assign(
+  function (codeWord: string) {
+    return {
+      type: 'PlutusV2',
+      script: applyParamsToScript(
+        '5858010000323232323232232232253330063371e6eb8c028c020dd50018020a4c26caca66600866e1d20003005375400226464a66601260160042930b1bae3009001300637540022c6eb80055cd2ab9d5573caae7d5d0aba201',
+        [codeWord],
+        { dataType: 'list', items: [{ dataType: 'bytes' }] } as any
+      )
+    };
+  },
+
+  {
+    redeemer: {
+      title: 'CoolTokenRedeemer',
+      anyOf: [
+        {
+          title: 'CoolTokenRedeemer',
+          dataType: 'constructor',
+          index: 0,
+          fields: [{ dataType: 'bytes', title: 'guessedWord' }]
+        }
+      ]
+    }
+  }
+) as unknown as MintGuesswordMint;
+
 export interface OneshotGiftCard {
   new (tokenName: string, utxoRef: { transactionId: { hash: string }; outputIndex: bigint }): Validator;
   rdmr: 'CheckMint' | 'CheckBurn';

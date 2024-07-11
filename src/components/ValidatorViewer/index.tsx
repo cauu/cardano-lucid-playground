@@ -4,6 +4,7 @@ import { ValidatorDeployer } from '@/src/contract/ValidatorDeployer';
 import { IUTxO } from '@/src/common/type';
 import { DatumView } from './DatumView';
 import { RedeemerView } from './RedeemerView';
+import { MintView } from './MintView';
 // import { IDatumMeta, IRedeemerMeta } from '@/src/common/type';
 
 interface IProps {
@@ -14,6 +15,8 @@ interface IProps {
   onUnlock?: (utxos: IUTxO[], redeemer: any) => void;
   // schema: IDatumMeta | IRedeemerMeta;
 }
+
+export { DatumView, RedeemerView, MintView };
 
 /**
  * 1. There two main panels for args editor, one for lock and one for redeem

@@ -168,7 +168,7 @@ export class ValidatorDeployer {
     return signedTx.submit();
   }
 
-  async mint(_assets: { [key: string]: bigint }) {
+  async mint(_assets: { [key: string]: bigint }, _redeemer?: any) {
     const policyId = this.lucid.utils.validatorToScriptHash(this.script);
 
     const tx = await this.lucid.newTx();
@@ -178,7 +178,12 @@ export class ValidatorDeployer {
       assets[`${policyId}${fromText(key)}`] = BigInt(_assets[key]);
     });
 
-    const signedTx = await (await tx.attachMintingPolicy(this.script).mintAssets(assets, Data.void()).complete())
+    const signedTx = await (
+      await tx
+        .attachMintingPolicy(this.script)
+        .mintAssets(assets, _redeemer || Data.void())
+        .complete()
+    )
       .sign()
       .complete();
 

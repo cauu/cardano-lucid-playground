@@ -46,11 +46,13 @@ export const ArgsEditorPanel = (props: IProps) => {
 
   return (
     <div className="flex-1 flex flex-col">
-      <Tabs onChange={handleChangeTab} value={tabIndex}>
-        {groups?.map((group) => {
-          return <Tab label={`${group.title}_${group.index}`} tabIndex={group.index}></Tab>;
-        })}
-      </Tabs>
+      {groups && groups.length && (
+        <Tabs onChange={handleChangeTab} value={tabIndex}>
+          {groups?.map((group) => {
+            return <Tab label={`${group.title}_${group.index}`} tabIndex={group.index}></Tab>;
+          })}
+        </Tabs>
+      )}
       <div className="relative flex-1 min-h-[40vh]">
         <Editor value={value} defaultValue={currDefaultValue} onChange={handleValueChange} />
       </div>
