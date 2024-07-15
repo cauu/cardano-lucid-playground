@@ -10,11 +10,11 @@ export const MintByGuessword = () => {
   const [assets, setAssets] = useState('');
 
   const redeemerSchema = useMemo(() => {
-    return deployers?.[0].redeemerMeta;
+    return deployers?.[0]?.redeemerMeta;
   }, [deployers]);
 
   const defaultRedeemerValue = useMemo(() => {
-    return deployers?.[0].defaultRedeemerValue;
+    return deployers?.[0]?.defaultRedeemerValue;
   }, [deployers]);
 
   const handleMint = () => {

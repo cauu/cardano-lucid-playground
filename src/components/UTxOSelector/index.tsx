@@ -2,6 +2,8 @@ import classNames from 'classnames';
 import { Popover, Checkbox } from '@mui/material';
 import { IUTxO } from '@/src/common/type';
 import { useState } from 'react';
+import { useLucid } from '@/src/hooks/useLucid';
+import { NetworkType } from '@cardano-foundation/cardano-connect-with-wallet-core';
 
 interface IProps {
   utxo: IUTxO;
@@ -12,13 +14,21 @@ interface IProps {
 export const UTxOSelector = (props: IProps) => {
   const { utxo, onSelect, onUnselect } = props;
 
+  const { networkType } = useLucid();
+
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [isSelected, setIsSelected] = useState(false);
 
   const open = Boolean(anchorEl);
 
-  const txUrl = `https://cardanoscan.io/transaction/${utxo.txHash}`;
-  const addressUrl = `https://cardanoscan.io/address/${utxo.address}`;
+  const txUrl =
+    networkType === NetworkType.MAINNET
+      ? `https://cardanoscan.io/transaction/${utxo.txHash}`
+      : `https://preview.cardanoscan.io/transaction/${utxo.txHash}`;
+  const addressUrl =
+    networkType === NetworkType.MAINNET
+      ? `https://cardanoscan.io/address/${utxo.address}`
+      : `https://preview.cardanoscan.io/address/${utxo.address}`;
 
   const handleShowDatum = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);

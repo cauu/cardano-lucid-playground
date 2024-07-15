@@ -7,6 +7,7 @@ import { Vesting } from './pages/Vesting';
 import { SimplestMint } from './pages/SimplestMint';
 import NotFound from './pages/404';
 import { MintByGuessword } from './pages/MintByGuessword';
+import { Counter } from './pages/Counter';
 
 const routerConfig: RouteObject[] = [
   {
@@ -16,10 +17,6 @@ const routerConfig: RouteObject[] = [
       {
         path: '/',
         element: <Navigate to="/hello-world" />
-      },
-      {
-        path: 'hello-world',
-        element: <HelloWorld />
       },
       {
         path: 'simplest-mint',
@@ -32,6 +29,14 @@ const routerConfig: RouteObject[] = [
       {
         path: 'vesting',
         element: <Vesting />
+      },
+      {
+        path: 'hello-world',
+        element: <HelloWorld />
+      },
+      {
+        path: 'counter',
+        element: <Counter />
       }
     ]
   },

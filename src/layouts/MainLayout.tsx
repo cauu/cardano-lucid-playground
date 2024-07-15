@@ -20,6 +20,10 @@ const menus = [
   {
     title: 'Vesting',
     path: '/vesting'
+  },
+  {
+    title: 'Counter',
+    path: '/counter'
   }
 ];
 
