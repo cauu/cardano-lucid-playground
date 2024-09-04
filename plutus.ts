@@ -159,6 +159,47 @@ export const SimplestMintSimplestMint = Object.assign(
   { _rdmr: { title: 'Data', description: 'Any Plutus data.' } }
 ) as unknown as SimplestMintSimplestMint;
 
+export interface StakeValidatorExampleSpend {
+  new (): Validator;
+  _datum: Data;
+  _redeemer: { wrapper: Data };
+}
+
+export const StakeValidatorExampleSpend = Object.assign(
+  function () {
+    return {
+      type: 'PlutusV2',
+      script:
+        '590156010000323232323232322253330033370e900018021baa0011533300332323253330063370e900218039baa00113253330073370e900018041baa00113253330083370e900118049baa0011324a26eb8c034c028dd50008b180618049baa00116300b300837540022c601460160046012002600a6ea800452613656132253330053232323253330093370e900118051baa0011323322323300100100322533301100114a0264a66601e66ebc010c040c050008528899801801800980a0009bab300f3010301030103010301030100013374a900019807180298061baa300f300c375466446466002002006446464a66602066ebcc02cc048dd50010028980a980b18091baa002133004004001301500230130013758601e002601e60186ea80092f5c060166ea800858c034c038008c030004c020dd5001118058008a4c26cac6010600a6ea80055cd2ab9d5573caae7d5d02ba15745'
+    };
+  },
+  { _datum: { title: 'Data', description: 'Any Plutus data.' } },
+  {
+    _redeemer: {
+      title: 'Wrapped Redeemer',
+      description: 'A redeemer wrapped in an extra constructor to make multi-validator detection possible on-chain.',
+      anyOf: [{ dataType: 'constructor', index: 1, fields: [{ description: 'Any Plutus data.' }] }]
+    }
+  }
+) as unknown as StakeValidatorExampleSpend;
+
+export interface StakeValidatorExampleWithdraw {
+  new (): Validator;
+  redeemer: Data;
+}
+
+export const StakeValidatorExampleWithdraw = Object.assign(
+  function () {
+    return {
+      type: 'PlutusV2',
+      script:
+        '590156010000323232323232322253330033370e900018021baa0011533300332323253330063370e900218039baa00113253330073370e900018041baa00113253330083370e900118049baa0011324a26eb8c034c028dd50008b180618049baa00116300b300837540022c601460160046012002600a6ea800452613656132253330053232323253330093370e900118051baa0011323322323300100100322533301100114a0264a66601e66ebc010c040c050008528899801801800980a0009bab300f3010301030103010301030100013374a900019807180298061baa300f300c375466446466002002006446464a66602066ebcc02cc048dd50010028980a980b18091baa002133004004001301500230130013758601e002601e60186ea80092f5c060166ea800858c034c038008c030004c020dd5001118058008a4c26cac6010600a6ea80055cd2ab9d5573caae7d5d02ba15745'
+    };
+  },
+
+  { redeemer: { title: 'Data', description: 'Any Plutus data.' } }
+) as unknown as StakeValidatorExampleWithdraw;
+
 export interface VestingVesting {
   new (): Validator;
   datum: { lockUntil: bigint; owner: string; beneficiary: string };

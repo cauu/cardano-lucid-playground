@@ -8,6 +8,7 @@ import { SimplestMint } from './pages/SimplestMint';
 import NotFound from './pages/404';
 import { MintByGuessword } from './pages/MintByGuessword';
 import { Counter } from './pages/Counter';
+import { StakeValidatorExample } from './pages/StakeValidatorExample';
 
 const routerConfig: RouteObject[] = [
   {
@@ -37,6 +38,10 @@ const routerConfig: RouteObject[] = [
       {
         path: 'counter',
         element: <Counter />
+      },
+      {
+        path: 'stake-validator',
+        element: <StakeValidatorExample />
       }
     ]
   },

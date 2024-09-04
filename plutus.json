@@ -101,6 +101,34 @@
       "hash": "d8906ca5c7ba124a0407a32dab37b2c82b13b3dcd9111e42940dcea4"
     },
     {
+      "title": "stake_validator_example.spend",
+      "datum": {
+        "title": "_datum",
+        "schema": {
+          "$ref": "#/definitions/Data"
+        }
+      },
+      "redeemer": {
+        "title": "_redeemer",
+        "schema": {
+          "$ref": "#/definitions/RedeemerWrapper$Data"
+        }
+      },
+      "compiledCode": "590156010000323232323232322253330033370e900018021baa0011533300332323253330063370e900218039baa00113253330073370e900018041baa00113253330083370e900118049baa0011324a26eb8c034c028dd50008b180618049baa00116300b300837540022c601460160046012002600a6ea800452613656132253330053232323253330093370e900118051baa0011323322323300100100322533301100114a0264a66601e66ebc010c040c050008528899801801800980a0009bab300f3010301030103010301030100013374a900019807180298061baa300f300c375466446466002002006446464a66602066ebcc02cc048dd50010028980a980b18091baa002133004004001301500230130013758601e002601e60186ea80092f5c060166ea800858c034c038008c030004c020dd5001118058008a4c26cac6010600a6ea80055cd2ab9d5573caae7d5d02ba15745",
+      "hash": "e60add40af9cfecd31f6b509ede4bd3031b1af8144fae1ec748a37cc"
+    },
+    {
+      "title": "stake_validator_example.withdraw",
+      "redeemer": {
+        "title": "redeemer",
+        "schema": {
+          "$ref": "#/definitions/Data"
+        }
+      },
+      "compiledCode": "590156010000323232323232322253330033370e900018021baa0011533300332323253330063370e900218039baa00113253330073370e900018041baa00113253330083370e900118049baa0011324a26eb8c034c028dd50008b180618049baa00116300b300837540022c601460160046012002600a6ea800452613656132253330053232323253330093370e900118051baa0011323322323300100100322533301100114a0264a66601e66ebc010c040c050008528899801801800980a0009bab300f3010301030103010301030100013374a900019807180298061baa300f300c375466446466002002006446464a66602066ebcc02cc048dd50010028980a980b18091baa002133004004001301500230130013758601e002601e60186ea80092f5c060166ea800858c034c038008c030004c020dd5001118058008a4c26cac6010600a6ea80055cd2ab9d5573caae7d5d02ba15745",
+      "hash": "e60add40af9cfecd31f6b509ede4bd3031b1af8144fae1ec748a37cc"
+    },
+    {
       "title": "vesting.vesting",
       "datum": {
         "title": "datum",
@@ -128,6 +156,21 @@
     },
     "Int": {
       "dataType": "integer"
+    },
+    "RedeemerWrapper$Data": {
+      "title": "Wrapped Redeemer",
+      "description": "A redeemer wrapped in an extra constructor to make multi-validator detection possible on-chain.",
+      "anyOf": [
+        {
+          "dataType": "constructor",
+          "index": 1,
+          "fields": [
+            {
+              "$ref": "#/definitions/Data"
+            }
+          ]
+        }
+      ]
     },
     "Void": {
       "title": "Unit",

@@ -7,6 +7,7 @@ import { NetworkType } from '@cardano-foundation/cardano-connect-with-wallet-cor
 
 interface ILucidContext {
   walletAddress: string;
+  rewardAddress: string;
   lucid: Lucid | null;
   networkType: NetworkType;
   switchNetwork: (_networkType: NetworkType) => void;
@@ -14,6 +15,7 @@ interface ILucidContext {
 
 const LucidContext = createContext<ILucidContext>({
   walletAddress: '',
+  rewardAddress: '',
   lucid: null,
   networkType: NetworkType.TESTNET,
   switchNetwork: () => {}
@@ -32,6 +34,7 @@ export function LucidProvider(props: IProps) {
   const [lucid, setLucid] = useState<Lucid | null>(null);
   const [networkType, setNetworkType] = useState<NetworkType>(NetworkType.TESTNET);
   const [walletAddress, setWalletAddress] = useState<string>('');
+  const [rewardAddress, setRewardAddress] = useState<string>('');
 
   useEffect(() => {
     if (!enabledWallet) return;
@@ -50,6 +53,12 @@ export function LucidProvider(props: IProps) {
       window.cardano[enabledWallet].enable().then((api) => {
         lucid.selectWallet(api);
 
+        lucid.wallet.rewardAddress().then((address) => {
+          if (address) {
+            setRewardAddress(address);
+          }
+        });
+
         lucid.wallet.address().then((address) => {
           setWalletAddress(address);
         });
@@ -67,11 +76,12 @@ export function LucidProvider(props: IProps) {
   const value = useMemo(() => {
     return {
       walletAddress,
+      rewardAddress,
       lucid,
       networkType,
       switchNetwork
     };
-  }, [walletAddress, lucid, networkType, switchNetwork]);
+  }, [walletAddress, lucid, networkType, switchNetwork, rewardAddress]);
 
   return <LucidContext.Provider value={value}>{children}</LucidContext.Provider>;
 }

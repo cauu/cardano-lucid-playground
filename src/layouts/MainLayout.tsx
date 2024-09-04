@@ -1,10 +1,14 @@
-import { MenuList, MenuItem } from '@mui/material';
+import { MenuList, MenuItem, Divider } from '@mui/material';
 
 import { ConnectWalletButton } from '../components/ConnectWalletButton';
 import { SwitchNetworkButton } from '../components/SwitchNetworkButton';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
-const menus = [
+const basicMenus = [
+  {
+    title: 'Hello, World!',
+    path: '/hello-world'
+  },
   {
     title: 'Simplest Mint',
     path: '/simplest-mint'
@@ -14,16 +18,23 @@ const menus = [
     path: '/mint-by-guessword'
   },
   {
-    title: 'Hello, World!',
-    path: '/hello-world'
-  },
-  {
     title: 'Vesting',
     path: '/vesting'
   },
   {
     title: 'Counter',
     path: '/counter'
+  },
+  {
+    title: 'Stake Validator',
+    path: '/stake-validator'
+  }
+];
+
+const ctfMenus = [
+  {
+    title: '01 - Sell nft',
+    path: '/ctf-01'
   }
 ];
 
@@ -44,13 +55,28 @@ export const MainLayout = () => {
       </header>
 
       <main className="flex flex-1">
-        <div className="w-[180px] border-r flex-0">
+        <div className="w-[220px] border-r flex-0">
           <MenuList className="!py-0">
-            {menus.map((menu) => {
+            {basicMenus.map((menu) => {
               return (
                 <MenuItem
+                  className="!pl-6"
                   key={menu.path}
                   selected={pathname === menu.path}
+                  onClick={() => {
+                    navigate(menu.path);
+                  }}
+                >
+                  {menu.title}
+                </MenuItem>
+              );
+            })}
+            <Divider />
+            {ctfMenus.map((menu) => {
+              return (
+                <MenuItem
+                  className="!pl-6"
+                  key={menu.title}
                   onClick={() => {
                     navigate(menu.path);
                   }}
